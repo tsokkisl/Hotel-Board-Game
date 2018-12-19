@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0000999999975" prefWidth="1299.9999000000025" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="hotelboardgame.InterfaceController">
+  <children>
+    <Label fx:id="player1" layoutX="45.0" layoutY="52.0" prefWidth="174.0" text="" textFill="RED">
+      <font>
+        <Font name="Algerian" size="20.0" fx:id="x3" />
+      </font>
+    </Label>
+    <Line endX="1196.0" endY="2.0" fill="BLACK" layoutX="101.0" layoutY="86.0" startX="-97.0" startY="0.0" strokeWidth="4.0" />
+    <Line endX="1195.0" endY="3.0" fill="BLACK" layoutX="102.0" layoutY="35.0" startX="-98.0" startY="1.0" strokeWidth="4.0" />
+    <Line endX="-57.0" endY="-171.0" layoutX="178.0" layoutY="173.0" startX="-57.0" startY="-139.0" strokeWidth="4.0" />
+    <Line endX="-57.0" endY="-171.0" layoutX="344.0" layoutY="173.0" startX="-57.0" startY="-139.0" strokeWidth="4.0" />
+    <Line endX="-57.0" endY="-175.0" layoutX="959.0" layoutY="264.0" startX="-54.0" startY="434.0" strokeWidth="4.0" />
+    <Line endX="-57.0" endY="-175.0" layoutX="60.0" layoutY="176.0" startX="-59.0" startY="522.0" strokeWidth="4.0" />
+    <Line endX="-57.0" endY="-171.0" layoutX="1355.0" layoutY="174.0" startX="-57.0" startY="524.0" strokeWidth="4.0" />
+    <Line endX="1198.0" endY="2.0" fill="BLACK" layoutX="100.0" layoutY="0.0" startX="-97.0" startY="0.0" strokeWidth="4.0" />
+    <Line endX="1198.0" endY="1.0" fill="BLACK" layoutX="100.0" layoutY="697.0" startX="-97.0" startY="0.0" strokeWidth="4.0" />
+    <MenuButton alignment="CENTER" contentDisplay="LEFT" graphicTextGap="4.0" layoutX="5.0" layoutY="4.0" mnemonicParsing="false" popupSide="BOTTOM" prefHeight="30.0" prefWidth="114.0" text="GAME" textAlignment="RIGHT" textOverrun="ELLIPSIS" wrapText="false">
+      <font>
+        <Font name="Algerian" size="15.0" fx:id="x1" />
+      </font>
+      <items>
+        <MenuItem mnemonicParsing="false" onAction="#handleGameStart" text="Start" />
+        <MenuItem mnemonicParsing="false" onAction="#handleGameStop" text="Stop" />
+        <MenuItem mnemonicParsing="false" onAction="#handleCardShow" text="Cards" />
+        <MenuItem mnemonicParsing="false" onAction="#handleGameExit" text="Exit" />
+      </items>
+      <textFill>
+        <Color blue="0.000" green="0.480" red="1.000" fx:id="x2" />
+      </textFill>
+    </MenuButton>
+    <MenuButton alignment="CENTER" font="$x1" layoutX="123.0" layoutY="3.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="162.0" text="STATISTICS" textAlignment="LEFT" textFill="$x2" textOverrun="ELLIPSIS" wrapText="false">
+      <items>
+        <MenuItem mnemonicParsing="false" text="Hotels" />
+        <MenuItem mnemonicParsing="false" text="Entrances" />
+        <MenuItem mnemonicParsing="false" onAction="#handleMaxProfitShow" text="Profits" />
+      </items>
+    </MenuButton>
+    <Label fx:id="player3" font="$x3" layoutX="487.0" layoutY="52.0" prefWidth="162.99993896484375" text="" textFill="#001899" />
+    <Label fx:id="player2" font="$x3" layoutX="265.0" layoutY="52.0" prefWidth="174.0" text="" textFill="#10cc00" />
+    <Label font="$x3" layoutX="859.0" layoutY="49.0" prefWidth="226.0" text="Available Hotels: 7" textFill="BLACK" />
+    <Label fx:id="timertext" font="$x3" layoutX="1085.0" layoutY="49.0" prefWidth="185.0" text="Total Time: 00:00" />
+    <Button fx:id="rolldicebutton" font="$x3" layoutX="911.0" layoutY="123.0" mnemonicParsing="false" onAction="#handleDiceRoll" prefHeight="76.0" prefWidth="226.0" text="ROLL DICE" textFill="BLACK" />
+    <Button fx:id="requestbuildbutton" font="$x3" layoutX="911.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleBuildRequest" prefHeight="76.0" prefWidth="226.0" text="Request building" textFill="BLACK" />
+    <Button fx:id="buyplotbutton" font="$x3" layoutX="911.0" layoutY="313.0" mnemonicParsing="false" onAction="#handleBuyPlot" prefHeight="76.0" prefWidth="226.0" text="BUY PLOT" textFill="BLACK" />
+    <Button fx:id="buygatebutton" font="$x3" layoutX="911.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleBuyGate" prefHeight="76.0" prefWidth="226.0" text="BUY GATE" textFill="BLACK" />
+    <Button fx:id="requestfrombankbutton" font="$x3" layoutX="911.0" layoutY="497.0" mnemonicParsing="false" onAction="#handleRequest1000FromBank" prefHeight="76.0" prefWidth="226.0" text="request 1000" textFill="BLACK" />
+    <Label font="$x3" layoutX="1021.0" layoutY="96.0" prefHeight="27.0" prefWidth="174.0" text="player moves" textAlignment="CENTER" />
+    <Label fx:id="dicerollresult" layoutX="1186.0" layoutY="131.0" prefHeight="60.0" prefWidth="75.0" text="" textAlignment="CENTER">
+      <font>
+        <Font size="25.0" fx:id="x4" />
+      </font>
+    </Label>
+    <Label fx:id="buildrequest" layoutX="1167.0" layoutY="223.0" prefHeight="60.0" prefWidth="114.0" text="" textAlignment="CENTER" />
+    <TextArea fx:id="gameboard" editable="false" layoutX="5.0" layoutY="91.0" prefHeight="605.0" prefWidth="894.1715698242188" wrapText="true" />
+    <Button fx:id="endroundbutton" font="$x3" layoutX="1037.0" layoutY="614.0" mnemonicParsing="false" onAction="#handleEndRound" prefHeight="55.0" prefWidth="163.0" text="END ROUND" />
+  </children>
+</AnchorPane>
