@@ -2,4 +2,4 @@
 
 Description
 ---
-Hotel board game implemented in Java 
+Hotel board game implemented in JavaFX 
