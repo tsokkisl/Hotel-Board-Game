@@ -41,7 +41,7 @@
     <MenuButton alignment="CENTER" font="$x1" layoutX="123.0" layoutY="3.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="162.0" text="STATISTICS" textAlignment="LEFT" textFill="$x2" textOverrun="ELLIPSIS" wrapText="false">
       <items>
         <MenuItem mnemonicParsing="false" text="Hotels" />
-        <MenuItem mnemonicParsing="false" text="Entrances" />
+        <MenuItem mnemonicParsing="false" onAction="#handleNumberOfEntrancesShow" text="Entrances" />
         <MenuItem mnemonicParsing="false" onAction="#handleMaxProfitShow" text="Profits" />
       </items>
     </MenuButton>
@@ -52,7 +52,7 @@
     <Button fx:id="rolldicebutton" font="$x3" layoutX="911.0" layoutY="123.0" mnemonicParsing="false" onAction="#handleDiceRoll" prefHeight="76.0" prefWidth="226.0" text="ROLL DICE" textFill="BLACK" />
     <Button fx:id="requestbuildbutton" font="$x3" layoutX="911.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleBuildRequest" prefHeight="76.0" prefWidth="226.0" text="Request building" textFill="BLACK" />
     <Button fx:id="buyplotbutton" font="$x3" layoutX="911.0" layoutY="313.0" mnemonicParsing="false" onAction="#handleBuyPlot" prefHeight="76.0" prefWidth="226.0" text="BUY PLOT" textFill="BLACK" />
-    <Button fx:id="buygatebutton" font="$x3" layoutX="911.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleBuyGate" prefHeight="76.0" prefWidth="226.0" text="BUY GATE" textFill="BLACK" />
+    <Button fx:id="buyentrancebutton" font="$x3" layoutX="911.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleBuyEntrance" prefHeight="76.0" prefWidth="226.0" text="BUY ENTRANCE" textFill="BLACK" />
     <Button fx:id="requestfrombankbutton" font="$x3" layoutX="911.0" layoutY="497.0" mnemonicParsing="false" onAction="#handleRequest1000FromBank" prefHeight="76.0" prefWidth="226.0" text="request 1000" textFill="BLACK" />
     <Label font="$x3" layoutX="1021.0" layoutY="96.0" prefHeight="27.0" prefWidth="174.0" text="player moves" textAlignment="CENTER" />
     <Label fx:id="dicerollresult" layoutX="1186.0" layoutY="131.0" prefHeight="60.0" prefWidth="75.0" text="" textAlignment="CENTER">
