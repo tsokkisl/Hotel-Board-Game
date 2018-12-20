@@ -5,6 +5,8 @@
  */
 package hotelboardgame;
 
+import java.util.ArrayList;
+
 public class Player {
     
     public int credits;
@@ -12,7 +14,7 @@ public class Player {
     public String name;
     public int maxProfit;
     public Hotel[] hotels = {};
-    public Entrance[] entrances = {};
+    public ArrayList<Entrance> entrances = new ArrayList<Entrance>();;
     public int position;
     
     Player(String n, String co, int cr, int p) {
