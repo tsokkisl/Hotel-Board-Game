@@ -7,8 +7,10 @@ package hotelboardgame;
 
 public class Entrance {
     public Hotel gHotel;
-    public Entrance(Hotel h) {
+    public int price;
+    public Entrance(Hotel h, int p) {
         gHotel = h;
+        price = p;
     }
     
 }
