@@ -56,7 +56,7 @@ public class InterfaceController implements Initializable {
     @FXML
     private Button buyplotbutton;
     @FXML
-    private Button buygatebutton;
+    private Button buyentrancebutton;
     @FXML
     private Button endroundbutton;
     
@@ -65,7 +65,7 @@ public class InterfaceController implements Initializable {
         requestbuildbutton.setDisable(true);
         requestfrombankbutton.setDisable(true);
         buyplotbutton.setDisable(true);
-        buygatebutton.setDisable(true);
+        buyentrancebutton.setDisable(true);
         endroundbutton.setDisable(true);
         dicerollresult.setText("");
         buildrequest.setText("");
@@ -103,7 +103,7 @@ public class InterfaceController implements Initializable {
         requestbuildbutton.setDisable(true);
         buyplotbutton.setDisable(true);
         requestfrombankbutton.setDisable(true);
-        buygatebutton.setDisable(true);
+        buyentrancebutton.setDisable(true);
         endroundbutton.setDisable(true);
         //Stop timer
     }
@@ -169,11 +169,7 @@ public class InterfaceController implements Initializable {
             showPlayerActions(players[2].position);
         }
         dicerollresult.setText(Integer.toString(x));
-        rolldicebutton.setDisable(true);
-        
-//        System.out.println("PLAYER " + players[0].name + "position is " + players[0].position);
-//        System.out.println("PLAYER " + players[1].name + "position is " + players[1].position);
-//        System.out.println("PLAYER " + players[2].name + "position is " + players[2].position);
+        rolldicebutton.setDisable(true);        
     }
     @FXML
     private void handleBuildRequest(ActionEvent event) {
@@ -190,8 +186,24 @@ public class InterfaceController implements Initializable {
         buyplotbutton.setDisable(true);
     }
     @FXML
-    private void handleBuyGate(ActionEvent event) {
-        buygatebutton.setDisable(true);
+    private void handleBuyEntrance(ActionEvent event) {
+        Entrance e = new Entrance(hotels[0], 500);
+        if (currentPlayer.name == "Player1") {
+            players[0].credits -= e.price;
+            players[0].entrances.add(e);
+            player1.setText("Player1 :" + players[0].credits);
+        }
+        if (currentPlayer.name == "Player2") {
+            players[1].credits -= e.price;
+            players[1].entrances.add(e);
+            player2.setText("Player2 :" + players[1].credits);
+        }
+        if (currentPlayer.name == "Player3") {
+            players[2].credits -= e.price;
+            players[2].entrances.add(e);
+            player3.setText("Player3 :" + players[2].credits);
+        }
+        buyentrancebutton.setDisable(true);
     }
     @FXML
     private void handleRequest1000FromBank(ActionEvent event) {
@@ -245,16 +257,41 @@ public class InterfaceController implements Initializable {
         };
         btn.setOnAction(closeevent);
     }
+    @FXML
+    private void handleNumberOfEntrancesShow(ActionEvent event) {
+        String str = "NUMBER OF ENTRANCES FOR EACH PLAYER" +'\n' + '\n' + '\n' + "Player1 : " + players[0].entrances.size() + '\n'
+        + "Player2 : " + players[1].entrances.size() + '\n'
+        + "Player3 : " + players[2].entrances.size() + '\n';
+        Popup popup = new Popup();
+        Label l = new Label();
+        l.setStyle(" -fx-background-color: #f2f2f2;-fx-font-weight: bold;");
+        Button btn = new Button("Close");
+        btn.setLayoutX(180);
+        btn.setLayoutY(270);
+        popup.getContent().add(l); 
+        popup.getContent().add(btn);
+        popup.setAutoHide(true);
+        l.setMinWidth(400); 
+        l.setMinHeight(300);
+        l.setText(str);
+        popup.show(myStage);
+        EventHandler<ActionEvent> closeevent =  new EventHandler<ActionEvent>() { 
+            public void handle(ActionEvent e) {     
+                popup.hide(); 
+            } 
+        };
+        btn.setOnAction(closeevent);
+    }
     private void showPlayerActions(int p) {
         switch(gameBoard.board[p]) {
             case "S" : break;
-            case "C" : buygatebutton.setDisable(false);
+            case "C" : buyentrancebutton.setDisable(false);
                        break;
             case "B" : requestfrombankbutton.setDisable(false);
                        break;
             case "H" : buyplotbutton.setDisable(false);
                        break;
-            case "E" : buygatebutton.setDisable(false);
+            case "E" : buyentrancebutton.setDisable(false);
                        requestbuildbutton.setDisable(false);
                        break;
             case "F" : break;
