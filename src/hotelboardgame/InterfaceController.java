@@ -5,6 +5,7 @@
  */
 package hotelboardgame;
 
+import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -46,8 +48,6 @@ public class InterfaceController implements Initializable {
     @FXML
     private  Label player3;
     @FXML
-    private  TextArea gameboard;
-    @FXML
     private Button rolldicebutton;
     @FXML
     private Button requestbuildbutton;
@@ -59,6 +59,9 @@ public class InterfaceController implements Initializable {
     private Button buyentrancebutton;
     @FXML
     private Button endroundbutton;
+    @FXML
+    private  GridPane gp;
+    private static final int SQUARES = 64;
     
     private void reinitializeFunctionality() {
         rolldicebutton.setDisable(false);
@@ -87,9 +90,10 @@ public class InterfaceController implements Initializable {
         reinitializeFunctionality();
         setUpGameBoard();
         startingPosition = gameBoard.start;
-        players[0] = new Player("Player1", "Blue", 12000, startingPosition);
-        players[1] = new Player("Player2", "Red", 12000, startingPosition);
-        players[2] = new Player("Player3", "Green", 12000, startingPosition);
+        players[0] = new Player("Player1", "Blue", 12000, startingPosition, Color.BLUE);
+        players[1] = new Player("Player2", "Red", 12000, startingPosition, Color.RED);
+        players[2] = new Player("Player3", "Green", 12000, startingPosition, Color.GREEN);
+        gameBoard.boardgrid[gameBoard.start].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
         currentPlayer = players[0];
         showCurrentPlayer(currentPlayer);
         player1.setText("Player1 :" + players[0].credits);
@@ -151,21 +155,24 @@ public class InterfaceController implements Initializable {
             if (players[0].position + x < 180)
                 players[0].position += x;
             else 
-                players[0].position += x - 180;
+                players[0].position = x - 180;
+            gameBoard.boardgrid[players[0].position].stack.getChildren().addAll(players[0].pawn);
             showPlayerActions(players[0].position);
         }
         if (currentPlayer.name == "Player2") {
             if (players[1].position + x < 180)
                 players[1].position += x;
             else 
-                players[1].position += x - 180;
+                players[1].position = x - 180;
+            gameBoard.boardgrid[players[1].position].stack.getChildren().addAll(players[1].pawn);
             showPlayerActions(players[1].position);
         }
         if (currentPlayer.name == "Player3") {
             if (players[2].position + x < 180)
                 players[2].position += x;
             else 
-                players[2].position += x - 180;
+                players[2].position = x - 180;
+            gameBoard.boardgrid[players[2].position].stack.getChildren().addAll(players[2].pawn);
             showPlayerActions(players[2].position);
         }
         dicerollresult.setText(Integer.toString(x));
@@ -309,20 +316,43 @@ public class InterfaceController implements Initializable {
     }
     
     private void outputBoard() {
-        String b = "";
         int m = 0;
-        for (int i = 0; i < 180; i++) { 
-            b += "      [" + gameBoard.board[i] + "]      ";
-            m++;
-            if (m == 15) {
-                b += '\n';
-                b += '\n';
-                b += '\n';
-                m = 0;
+        for (int i = 0; i < 12; i ++){
+            for (int j = 0; j < 15; j++){
+                Rect r = new Rect();
+                r.rec.setWidth(57);
+                r.rec.setHeight(48);
+                switch(gameBoard.board[m]) {
+                    case "S" : r.rec.setFill(Color.BLACK);
+                               r.text.setText("START");
+                               break;
+                    case "C" : r.rec.setFill(Color.BROWN);
+                               r.text.setText("MAYOR");
+                               break;
+                    case "B" : r.rec.setFill(Color.ORANGE);
+                               r.text.setText("BANK");
+                               break;
+                    case "H" : r.rec.setFill(Color.PURPLE);
+                               r.text.setText("PLOT");
+                               break;
+                    case "E" : r.rec.setFill(Color.YELLOW);
+                               r.text.setText("GATE");
+                               break;
+                    case "F" : r.rec.setFill(Color.GRAY);
+                               r.text.setText("FREE");
+                               break;
+                    default  : r.rec.setFill(Color.CYAN);
+                               r.text.setText("H" + gameBoard.board[m]);
+                               break;
+                }
+                r.stack.getChildren().addAll(r.rec, r.text);
+                gameBoard.boardgrid[m] = r;
+                GridPane.setRowIndex(r.stack, i);
+                GridPane.setColumnIndex(r.stack, j);
+                gp.getChildren().addAll(r.stack);
+                m++;
             }
-        }
-        b = b.substring(0, b.length() - 4);
-        gameboard.setText(b);
+        } 
     }
     private void setUpGameBoard() {
         //INITIALIZE THE BOARD
@@ -334,9 +364,10 @@ public class InterfaceController implements Initializable {
         setUpGameBoard();
         reinitializeFunctionality();
         startingPosition = gameBoard.start;
-        players[0] = new Player("Player1", "Blue", 12000, startingPosition);
-        players[1] = new Player("Player2", "Red", 12000, startingPosition);
-        players[2] = new Player("Player3", "Green", 12000, startingPosition);
+        players[0] = new Player("Player1", "Blue", 12000, startingPosition, Color.BLUE);
+        players[1] = new Player("Player2", "Red", 12000, startingPosition, Color.RED);
+        players[2] = new Player("Player3", "Green", 12000, startingPosition, Color.GREEN);
+        gameBoard.boardgrid[gameBoard.start].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
         player1.setText("Player1 :" + players[0].credits);
         player2.setText("Player2 :" + players[1].credits);
         player3.setText("Player3 :" + players[2].credits);
@@ -354,5 +385,4 @@ public class InterfaceController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initializeGame();
     }    
-    
 }
