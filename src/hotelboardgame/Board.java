@@ -14,7 +14,7 @@ import java.util.Random;
 public class Board {
     public String[] board = new String[180];
     public Rect[] boardgrid = new Rect[180];
-    public int start;
+    public int start,bank,townhall;
     private static String cDir = new File("").getAbsolutePath();
     
     public void parseBoard() {
@@ -36,7 +36,12 @@ public class Board {
             for (int i = 0; i < 180; i++) {
                 if (board[i].equals("S")) {
                     start = i;
-                    break;
+                }
+                if (board[i].equals("B")) {
+                    bank = i;
+                }
+                if (board[i].equals("C")) {
+                    townhall = i;
                 }
             }
         } catch (IOException e) {
