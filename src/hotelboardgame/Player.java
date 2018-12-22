@@ -19,6 +19,10 @@ public class Player {
     public ArrayList<Entrance> entrances = new ArrayList<Entrance>();
     public int position;
     public Circle pawn = new Circle(25);
+    public boolean passedBank;
+    public boolean passedTownHall;
+    public boolean changedRoundForTownHall;
+    public boolean changedRoundForBank;
     
     Player(String n, String co, int cr, int p, Color f) {
         name = n;
@@ -26,6 +30,10 @@ public class Player {
         credits = cr;
         maxProfit = cr;
         position = p;
+        passedBank = false;
+        passedTownHall = false;
+        changedRoundForTownHall = false;
+        changedRoundForBank = false;
         pawn.setFill(f);
     }
     
