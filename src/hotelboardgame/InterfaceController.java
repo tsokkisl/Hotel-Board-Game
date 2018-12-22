@@ -61,7 +61,6 @@ public class InterfaceController implements Initializable {
     private Button endroundbutton;
     @FXML
     private  GridPane gp;
-    private static final int SQUARES = 64;
     
     private void reinitializeFunctionality() {
         rolldicebutton.setDisable(false);
@@ -151,29 +150,37 @@ public class InterfaceController implements Initializable {
     private void handleDiceRoll(ActionEvent event) {
         Random ran = new Random();
         int x = ran.nextInt(6) + 1;
+        int temppos = 0;
         if (currentPlayer.name == "Player1") {
+            
             if (players[0].position + x < 180)
-                players[0].position += x;
+                temppos = players[0].position + x;
             else 
-                players[0].position = x - 180;
-            gameBoard.boardgrid[players[0].position].stack.getChildren().addAll(players[0].pawn);
-            showPlayerActions(players[0].position);
+                temppos = players[0].position + x - 180;
+            int p = checkForOtherPlayersOnTheSamePosition(temppos);
+            gameBoard.boardgrid[p].stack.getChildren().addAll(players[0].pawn);
+            players[0].position = p;
+            showPlayerActions(players[0]);
         }
         if (currentPlayer.name == "Player2") {
             if (players[1].position + x < 180)
-                players[1].position += x;
+                temppos = players[1].position + x;
             else 
-                players[1].position = x - 180;
-            gameBoard.boardgrid[players[1].position].stack.getChildren().addAll(players[1].pawn);
-            showPlayerActions(players[1].position);
+                temppos = players[1].position + x - 180;
+            int p = checkForOtherPlayersOnTheSamePosition(temppos);
+            gameBoard.boardgrid[p].stack.getChildren().addAll(players[1].pawn);
+            players[1].position = p;
+            showPlayerActions(players[1]);
         }
         if (currentPlayer.name == "Player3") {
             if (players[2].position + x < 180)
-                players[2].position += x;
+                temppos = players[2].position + x;
             else 
-                players[2].position = x - 180;
-            gameBoard.boardgrid[players[2].position].stack.getChildren().addAll(players[2].pawn);
-            showPlayerActions(players[2].position);
+                temppos = players[2].position + x - 180;
+            int p = checkForOtherPlayersOnTheSamePosition(temppos);
+            gameBoard.boardgrid[p].stack.getChildren().addAll(players[2].pawn);
+            players[2].position = p;
+            showPlayerActions(players[2]);
         }
         dicerollresult.setText(Integer.toString(x));
         rolldicebutton.setDisable(true);        
@@ -289,20 +296,45 @@ public class InterfaceController implements Initializable {
         };
         btn.setOnAction(closeevent);
     }
-    private void showPlayerActions(int p) {
-        switch(gameBoard.board[p]) {
-            case "S" : break;
-            case "C" : buyentrancebutton.setDisable(false);
-                       break;
-            case "B" : requestfrombankbutton.setDisable(false);
-                       break;
-            case "H" : buyplotbutton.setDisable(false);
-                       break;
-            case "E" : buyentrancebutton.setDisable(false);
-                       requestbuildbutton.setDisable(false);
-                       break;
-            case "F" : break;
-            default  : break;
+    private int checkForOtherPlayersOnTheSamePosition (int pos) {
+        int p = pos;
+        if (players[0].position == p || players[1].position == p || players[2].position == p) {
+            p++;
+            if (players[0].position == p || players[1].position == p || players[2].position == p) {
+                p++;
+            }
+        }
+        return p;
+    }
+    private void showPlayerActions(Player p) {
+        if (gameBoard.townhall > gameBoard.start) {
+            if (gameBoard.townhall <= p.position && !p.passedTownHall) {
+                buyentrancebutton.setDisable(false);
+                p.passedTownHall = true;
+            }
+        }
+        else if (gameBoard.townhall < gameBoard.start) {
+            if (gameBoard.townhall <= p.position && p.changedRoundForTownHall) {
+                buyentrancebutton.setDisable(false);
+                p.changedRoundForTownHall = true;
+            }
+        }
+        if (gameBoard.bank > gameBoard.start) {
+            if (gameBoard.bank <= p.position && !p.passedBank) {
+                requestfrombankbutton.setDisable(false);
+                p.passedBank = true;
+            }
+        }
+        else if (gameBoard.bank < gameBoard.start) {
+            if (gameBoard.bank <= p.position && p.changedRoundForBank) {
+                requestfrombankbutton.setDisable(false);
+                p.changedRoundForBank = true;
+            }
+        }
+        if (gameBoard.board[p.position].equals("H")) buyplotbutton.setDisable(false);
+        if (gameBoard.board[p.position].equals("E")) {
+            buyentrancebutton.setDisable(false);
+            requestbuildbutton.setDisable(false);
         }
         endroundbutton.setDisable(false);
     }
