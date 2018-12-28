@@ -82,6 +82,12 @@ public class InterfaceController implements Initializable {
             + "Upgrade level " + (i + 1) + " Rent: " + h.upgradeBuildRent[i];
         return s;
     }
+    private String hotelInfo(Hotel h) {
+        String s = "";
+        s = "Name: " + h.name + '\n' + "Owner: " + "None" + '\n' + "Max upgrade level: " + "4" + '\n'
+        + "Current upgrade level: " + "2" + '\n';
+        return s;
+    }
     @FXML
     private void handleGameStart(ActionEvent event) {
         //Game restart and initialize all values
@@ -119,6 +125,37 @@ public class InterfaceController implements Initializable {
             tabs[i] = new Tab();
             tabs[i].setText("Hotel " + (i + 1));
             s = hotelDetails(hotels[i]);
+            TextArea ta = new TextArea(s);
+            ta.setDisable(true);
+            tabs[i].setContent(ta);
+            tabPane.getTabs().add(tabs[i]);
+        }
+        Popup popup = new Popup(); 
+        tabPane.setStyle(" -fx-background-color: #cfcfcf;");
+        Button btn = new Button("Close");
+        btn.setLayoutX(750);
+        popup.getContent().add(tabPane); 
+        popup.getContent().add(btn);
+        popup.setAutoHide(true);
+        tabPane.setMinWidth(800); 
+        tabPane.setMinHeight(600);
+        popup.show(myStage);
+        EventHandler<ActionEvent> closeevent =  new EventHandler<ActionEvent>() { 
+            public void handle(ActionEvent e) {     
+                popup.hide(); 
+            } 
+        };
+        btn.setOnAction(closeevent);
+    }
+    @FXML
+    private void handleHotelInfoShow(ActionEvent event) {
+        Tab[] tabs = new Tab[6];
+        TabPane tabPane = new TabPane();
+        String s = "";
+        for(int i = 0; i < 6; i++) {
+            tabs[i] = new Tab();
+            tabs[i].setText("Hotel " + (i + 1));
+            s = hotelInfo(hotels[i]);
             TextArea ta = new TextArea(s);
             ta.setDisable(true);
             tabs[i].setContent(ta);
