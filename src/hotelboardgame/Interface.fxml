@@ -40,7 +40,7 @@
     </MenuButton>
     <MenuButton alignment="CENTER" font="$x1" layoutX="123.0" layoutY="3.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="162.0" text="STATISTICS" textAlignment="LEFT" textFill="$x2" textOverrun="ELLIPSIS" wrapText="false">
       <items>
-        <MenuItem mnemonicParsing="false" text="Hotels" />
+        <MenuItem mnemonicParsing="false" onAction="#handleHotelInfoShow" text="Hotels" />
         <MenuItem mnemonicParsing="false" onAction="#handleNumberOfEntrancesShow" text="Entrances" />
         <MenuItem mnemonicParsing="false" onAction="#handleMaxProfitShow" text="Profits" />
       </items>
