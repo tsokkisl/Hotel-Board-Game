@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Board {
-    public String[] board = new String[180];
-    public Rect[] boardgrid = new Rect[180];
-    public int start,bank,townhall;
+    public String[][] board = new String[12][15];
+    public Rect[][] boardgrid = new Rect[12][15];
+    public int startX,bankX,townhallX,startY,bankY,townhallY;
     private static String cDir = new File("").getAbsolutePath();
     
     public void parseBoard() {
@@ -26,22 +26,29 @@ public class Board {
         else folder = "default";
         
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(cDir + "/src/hotelboardgame/boards/" + folder + "/board.txt")))) {
-            String line,l = "";
+            String line;
+            int k = 0;
+            String b[] = new String[15];
             while ((line = reader.readLine()) != null) {
-                l += line;
-                l += ",";
+                b = line.split(",");
+                for(int j = 0; j < 15; j++) board[k][j] = b[j];
+                k++;
             }
-            board = l.split(",");
             
-            for (int i = 0; i < 180; i++) {
-                if (board[i].equals("S")) {
-                    start = i;
-                }
-                if (board[i].equals("B")) {
-                    bank = i;
-                }
-                if (board[i].equals("C")) {
-                    townhall = i;
+            for (int i = 0; i < 12; i++) {
+                for(int j = 0; j < 15; j++) {
+                    if (board[i][j].equals("S")) {
+                        startX = i;
+                        startY = j;
+                    }
+                    if (board[i][j].equals("B")) {
+                        bankX = i;
+                        bankY = j;
+                    }
+                    if (board[i][j].equals("C")) {
+                        townhallX = i;
+                        townhallY = j;
+                    }
                 }
             }
         } catch (IOException e) {
