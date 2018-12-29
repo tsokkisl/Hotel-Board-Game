@@ -25,7 +25,8 @@ import javafx.stage.Stage;
 
 public class InterfaceController implements Initializable {
     private static Stage myStage;
-    private int startingPosition;
+    private int startingPositionX;
+    private int startingPositionY;
     private Player currentPlayer;
     private int turn = 0;
     private Player[] players = new Player[3];
@@ -94,11 +95,12 @@ public class InterfaceController implements Initializable {
         turn = 0;
         reinitializeFunctionality();
         setUpGameBoard();
-        startingPosition = gameBoard.start;
-        players[0] = new Player("Player1", "Blue", 12000, startingPosition, Color.BLUE);
-        players[1] = new Player("Player2", "Red", 12000, startingPosition, Color.RED);
-        players[2] = new Player("Player3", "Green", 12000, startingPosition, Color.GREEN);
-        gameBoard.boardgrid[gameBoard.start].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
+        startingPositionX = gameBoard.startX;
+        startingPositionY = gameBoard.startY;
+        players[0] = new Player("Player1", "Blue", 12000, startingPositionX, startingPositionY, Color.BLUE);
+        players[1] = new Player("Player2", "Red", 12000, startingPositionX, startingPositionY, Color.RED);
+        players[2] = new Player("Player3", "Green", 12000, startingPositionX, startingPositionY, Color.GREEN);
+        gameBoard.boardgrid[gameBoard.startX][gameBoard.startY].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
         currentPlayer = players[0];
         showCurrentPlayer(currentPlayer);
         player1.setText("Player1 :" + players[0].credits);
@@ -187,36 +189,22 @@ public class InterfaceController implements Initializable {
     private void handleDiceRoll(ActionEvent event) {
         Random ran = new Random();
         int x = ran.nextInt(6) + 1;
-        int temppos = 0;
-        if (currentPlayer.name == "Player1") {
-            
-            if (players[0].position + x < 180)
-                temppos = players[0].position + x;
-            else 
-                temppos = players[0].position + x - 180;
-            int p = checkForOtherPlayersOnTheSamePosition(temppos);
-            gameBoard.boardgrid[p].stack.getChildren().addAll(players[0].pawn);
-            players[0].position = p;
+        if (currentPlayer.name == "Player1") {          
+            move(players[0], x);
+            checkForOtherPlayersOnTheSamePosition(players[0]);
+            gameBoard.boardgrid[players[0].positionX][players[0].positionY].stack.getChildren().addAll(players[0].pawn);
             showPlayerActions(players[0]);
         }
         if (currentPlayer.name == "Player2") {
-            if (players[1].position + x < 180)
-                temppos = players[1].position + x;
-            else 
-                temppos = players[1].position + x - 180;
-            int p = checkForOtherPlayersOnTheSamePosition(temppos);
-            gameBoard.boardgrid[p].stack.getChildren().addAll(players[1].pawn);
-            players[1].position = p;
+            move(players[1], x);
+            checkForOtherPlayersOnTheSamePosition(players[1]);
+            gameBoard.boardgrid[players[1].positionX][players[1].positionY].stack.getChildren().addAll(players[1].pawn);
             showPlayerActions(players[1]);
         }
         if (currentPlayer.name == "Player3") {
-            if (players[2].position + x < 180)
-                temppos = players[2].position + x;
-            else 
-                temppos = players[2].position + x - 180;
-            int p = checkForOtherPlayersOnTheSamePosition(temppos);
-            gameBoard.boardgrid[p].stack.getChildren().addAll(players[2].pawn);
-            players[2].position = p;
+            move(players[2], x);
+            checkForOtherPlayersOnTheSamePosition(players[2]);
+            gameBoard.boardgrid[players[2].positionX][players[2].positionY].stack.getChildren().addAll(players[2].pawn);
             showPlayerActions(players[2]);
         }
         dicerollresult.setText(Integer.toString(x));
@@ -333,43 +321,63 @@ public class InterfaceController implements Initializable {
         };
         btn.setOnAction(closeevent);
     }
-    private int checkForOtherPlayersOnTheSamePosition (int pos) {
-        int p = pos;
-        if (players[0].position == p || players[1].position == p || players[2].position == p) {
-            p++;
-            if (players[0].position == p || players[1].position == p || players[2].position == p) {
-                p++;
+    private void checkForOtherPlayersOnTheSamePosition (Player p) {
+        if(p.name.equals("Player1")) {
+            if ((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
+                //System.out.print("HERE1");
+                move(players[0], 1);
+                if ((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
+                    //System.out.print("HERE2");
+                    move(players[0], 1);
+                }
             }
         }
-        return p;
+        else if (p.name.equals("Player2")) {
+            if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
+                move(players[1], 1);
+                if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
+                   move(players[1], 1);
+                }
+            }
+        }
+        else if (p.name.equals("Player3")) {
+            if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[1].positionX == p.positionX && players[1].positionY == p.positionY)) {
+                move(players[2], 1);
+                if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[1].positionX == p.positionX && players[1].positionY == p.positionY)) {
+                   move(players[2], 1);
+                }
+            }
+        }
     }
     private void showPlayerActions(Player p) {
-        if (gameBoard.townhall > gameBoard.start) {
-            if (gameBoard.townhall <= p.position && !p.passedTownHall) {
-                buyentrancebutton.setDisable(false);
-                p.passedTownHall = true;
-            }
-        }
-        else if (gameBoard.townhall < gameBoard.start) {
-            if (gameBoard.townhall <= p.position && p.changedRoundForTownHall) {
+        //check for townhall
+        if (gameBoard.townhallY > gameBoard.startY) {
+            if (gameBoard.townhallY <= p.positionY && !p.changedRoundForTownHall) {
                 buyentrancebutton.setDisable(false);
                 p.changedRoundForTownHall = true;
             }
         }
-        if (gameBoard.bank > gameBoard.start) {
-            if (gameBoard.bank <= p.position && !p.passedBank) {
-                requestfrombankbutton.setDisable(false);
-                p.passedBank = true;
+        else if (gameBoard.townhallY < gameBoard.startY) {
+            if (gameBoard.townhallY >= p.positionY && !p.passedTownHall) {
+                buyentrancebutton.setDisable(false);
+                p.passedTownHall = true;
             }
         }
-        else if (gameBoard.bank < gameBoard.start) {
-            if (gameBoard.bank <= p.position && p.changedRoundForBank) {
+        //check for bank
+        if (gameBoard.bankY > gameBoard.startY) {
+            if (gameBoard.bankY <= p.positionY && !p.changedRoundForBank) {
                 requestfrombankbutton.setDisable(false);
                 p.changedRoundForBank = true;
             }
         }
-        if (gameBoard.board[p.position].equals("H")) buyplotbutton.setDisable(false);
-        if (gameBoard.board[p.position].equals("E")) {
+        else if (gameBoard.bankY < gameBoard.startY) {
+            if (gameBoard.bankY >= p.positionY && !p.passedBank) {
+                requestfrombankbutton.setDisable(false);
+                p.passedBank = true;
+            }
+        }
+        if (gameBoard.board[p.positionX][p.positionY].equals("H")) buyplotbutton.setDisable(false);
+        if (gameBoard.board[p.positionX][p.positionY].equals("E")) {
             buyentrancebutton.setDisable(false);
             requestbuildbutton.setDisable(false);
         }
@@ -383,15 +391,37 @@ public class InterfaceController implements Initializable {
         if (p.name == "Player3") {player3.setStyle("-fx-background-color: yellow;");}
         else {player3.setStyle("-fx-background-color: inherit;");}
     }
-    
+    private void move(Player p, int k) {
+        for(int i = 0; i < k; i++) {
+            if ((gameBoard.board[p.positionX][p.positionY + 1].equals("S") || gameBoard.board[p.positionX][p.positionY + 1].equals("B") || gameBoard.board[p.positionX][p.positionY + 1].equals("C") || gameBoard.board[p.positionX][p.positionY + 1].equals("H") || gameBoard.board[p.positionX][p.positionY + 1].equals("E")) && (p.positionY + 1 != p.prevPositionY || p.positionX != p.prevPositionX)) {
+                p.prevPositionY = p.positionY;
+                p.prevPositionX = p.positionX;
+                p.positionY++;
+            }
+            else if ((gameBoard.board[p.positionX + 1][p.positionY].equals("S") || gameBoard.board[p.positionX + 1][p.positionY].equals("B") || gameBoard.board[p.positionX + 1][p.positionY].equals("C") || gameBoard.board[p.positionX + 1][p.positionY].equals("H") || gameBoard.board[p.positionX + 1][p.positionY].equals("E")) && (p.positionX + 1 != p.prevPositionX || p.positionY != p.prevPositionY)) {         
+                p.prevPositionY = p.positionY;
+                p.prevPositionX = p.positionX;
+                p.positionX++;
+            }
+            else if ((gameBoard.board[p.positionX][p.positionY - 1].equals("S") || gameBoard.board[p.positionX][p.positionY - 1].equals("B") || gameBoard.board[p.positionX][p.positionY - 1].equals("C") || gameBoard.board[p.positionX][p.positionY - 1].equals("H") || gameBoard.board[p.positionX][p.positionY - 1].equals("E")) && (p.positionY - 1 != p.prevPositionY || p.positionX != p.prevPositionX)) {
+                p.prevPositionY = p.positionY;
+                p.prevPositionX = p.positionX;
+                p.positionY--;
+            }
+            else if ((gameBoard.board[p.positionX - 1][p.positionY].equals("S") || gameBoard.board[p.positionX - 1][p.positionY].equals("B") || gameBoard.board[p.positionX - 1][p.positionY].equals("C") || gameBoard.board[p.positionX - 1][p.positionY].equals("H") || gameBoard.board[p.positionX - 1][p.positionY].equals("E")) && (p.positionX - 1 != p.prevPositionX || p.positionY != p.prevPositionY)) {
+                p.prevPositionY = p.positionY;
+                p.prevPositionX = p.positionX;
+                p.positionX--;
+            }
+        }
+    }
     private void outputBoard() {
-        int m = 0;
         for (int i = 0; i < 12; i ++){
             for (int j = 0; j < 15; j++){
                 Rect r = new Rect();
                 r.rec.setWidth(57);
                 r.rec.setHeight(48);
-                switch(gameBoard.board[m]) {
+                switch(gameBoard.board[i][j]) {
                     case "S" : r.rec.setFill(Color.BLACK);
                                r.text.setText("START");
                                break;
@@ -411,15 +441,14 @@ public class InterfaceController implements Initializable {
                                r.text.setText("FREE");
                                break;
                     default  : r.rec.setFill(Color.CYAN);
-                               r.text.setText("H" + gameBoard.board[m]);
+                               r.text.setText("H" + gameBoard.board[i][j]);
                                break;
                 }
                 r.stack.getChildren().addAll(r.rec, r.text);
-                gameBoard.boardgrid[m] = r;
+                gameBoard.boardgrid[i][j] = r;
                 GridPane.setRowIndex(r.stack, i);
                 GridPane.setColumnIndex(r.stack, j);
                 gp.getChildren().addAll(r.stack);
-                m++;
             }
         } 
     }
@@ -432,11 +461,12 @@ public class InterfaceController implements Initializable {
     private void initializeGame() {
         setUpGameBoard();
         reinitializeFunctionality();
-        startingPosition = gameBoard.start;
-        players[0] = new Player("Player1", "Blue", 12000, startingPosition, Color.BLUE);
-        players[1] = new Player("Player2", "Red", 12000, startingPosition, Color.RED);
-        players[2] = new Player("Player3", "Green", 12000, startingPosition, Color.GREEN);
-        gameBoard.boardgrid[gameBoard.start].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
+        startingPositionX = gameBoard.startX;
+        startingPositionY = gameBoard.startY;
+        players[0] = new Player("Player1", "Blue", 12000, startingPositionX, startingPositionY, Color.BLUE);
+        players[1] = new Player("Player2", "Red", 12000, startingPositionX, startingPositionY, Color.RED);
+        players[2] = new Player("Player3", "Green", 12000, startingPositionX, startingPositionY, Color.GREEN);
+        gameBoard.boardgrid[gameBoard.startX][gameBoard.startY].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
         player1.setText("Player1 :" + players[0].credits);
         player2.setText("Player2 :" + players[1].credits);
         player3.setText("Player3 :" + players[2].credits);
