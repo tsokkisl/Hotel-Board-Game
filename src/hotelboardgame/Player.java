@@ -17,19 +17,25 @@ public class Player {
     public int maxProfit;
     public Hotel[] hotels = {};
     public ArrayList<Entrance> entrances = new ArrayList<Entrance>();
-    public int position;
+    public int positionX;
+    public int positionY;
+    public int prevPositionX;
+    public int prevPositionY;
     public Circle pawn = new Circle(25);
     public boolean passedBank;
     public boolean passedTownHall;
     public boolean changedRoundForTownHall;
     public boolean changedRoundForBank;
     
-    Player(String n, String co, int cr, int p, Color f) {
+    Player(String n, String co, int cr, int px, int py, Color f) {
         name = n;
         color  = co;
         credits = cr;
         maxProfit = cr;
-        position = p;
+        positionX = px;
+        positionY = py;
+        prevPositionX = px;
+        prevPositionY = py;
         passedBank = false;
         passedTownHall = false;
         changedRoundForTownHall = false;
