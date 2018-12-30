@@ -7,6 +7,7 @@ package hotelboardgame;
 
 public class Hotel {
     public String name;
+    public int number;
     public int plotCost;
     public int requiredPlotCost;
     public int entranceCost;
@@ -16,8 +17,9 @@ public class Hotel {
     public int[] upgradeBuildRent;
     public int outsideBuildCost;
     public int maxRent;
+    public Plot plot;
     
-    Hotel(String n, int pc, int rpc, int ec, int bc, int br, int[] ubc, int[] ubr,int obc, int mr) {
+    Hotel(String n, int pc, int rpc, int ec, int bc, int br, int[] ubc, int[] ubr,int obc, int mr, int num) {
         name = n;
         plotCost = pc;
         requiredPlotCost = rpc;
@@ -28,6 +30,8 @@ public class Hotel {
         upgradeBuildRent = ubr;
         outsideBuildCost = obc;
         maxRent = mr;
+        number = num;
+        plot = new Plot();
     }
     
 }
