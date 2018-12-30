@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import java.util.Random;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -35,6 +36,7 @@ public class InterfaceController implements Initializable {
          myStage = stage;
     }
     private static Board gameBoard = new Board();
+    private int plot1x = -1, plot2x = -1, plot1y = -1, plot2y = -1, plotToBuyX, plotToBuyY;
     /**
      * Initializes the controller class.
      */
@@ -48,6 +50,8 @@ public class InterfaceController implements Initializable {
     private  Label player2;
     @FXML
     private  Label player3;
+    @FXML
+    private Label buyplotmessage;
     @FXML
     private Button rolldicebutton;
     @FXML
@@ -72,6 +76,7 @@ public class InterfaceController implements Initializable {
         endroundbutton.setDisable(true);
         dicerollresult.setText("");
         buildrequest.setText("");
+        buyplotmessage.setText("");
     }
     private String hotelDetails(Hotel h) {
         String s = "";
@@ -133,9 +138,11 @@ public class InterfaceController implements Initializable {
             tabPane.getTabs().add(tabs[i]);
         }
         Popup popup = new Popup(); 
-        tabPane.setStyle(" -fx-background-color: #cfcfcf;");
+        tabPane.setStyle(" -fx-background-color: #cfcfcf;-fx-font: 18 algerian;");
         Button btn = new Button("Close");
-        btn.setLayoutX(750);
+        btn.setLayoutX(720);
+        btn.setMinWidth(80);
+        btn.setMinHeight(40);
         popup.getContent().add(tabPane); 
         popup.getContent().add(btn);
         popup.setAutoHide(true);
@@ -164,9 +171,11 @@ public class InterfaceController implements Initializable {
             tabPane.getTabs().add(tabs[i]);
         }
         Popup popup = new Popup(); 
-        tabPane.setStyle(" -fx-background-color: #cfcfcf;");
+        tabPane.setStyle(" -fx-background-color: #cfcfcf;-fx-font: 18 algerian;");
         Button btn = new Button("Close");
-        btn.setLayoutX(750);
+        btn.setLayoutX(720);
+        btn.setMinWidth(80);
+        btn.setMinHeight(40);
         popup.getContent().add(tabPane); 
         popup.getContent().add(btn);
         popup.setAutoHide(true);
@@ -222,7 +231,19 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleBuyPlot(ActionEvent event) {
-        buyplotbutton.setDisable(true);
+        
+        if (currentPlayer.name.equals("Player1")) {
+            checkForAvailablePlot(players[0]);
+            player1.setText("Player1 :" + players[0].credits);
+        }
+        else if (currentPlayer.name.equals("Player2")) {
+            checkForAvailablePlot(players[1]);
+            player2.setText("Player2 :" + players[1].credits);
+        }
+        else {
+            checkForAvailablePlot(players[2]);
+            player3.setText("Player3 :" + players[2].credits);
+        }
     }
     @FXML
     private void handleBuyEntrance(ActionEvent event) {
@@ -273,21 +294,26 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleMaxProfitShow(ActionEvent event) {
-        String str = "MAX PROFIT OF PLAYERS" +'\n' + '\n' + '\n' + "Player1 : " + players[0].maxProfit + '\n'
+        String s = "MAX PROFIT OF PLAYERS" +'\n' + '\n' + '\n' + "Player1 : " + players[0].maxProfit + '\n'
         + "Player2 : " + players[1].maxProfit + '\n'
-        + "Player3 : " + players[2].maxProfit + '\n';
-        Popup popup = new Popup();
-        Label l = new Label();
-        l.setStyle(" -fx-background-color: #f2f2f2;-fx-font-weight: bold;");
+        + "Player3 : " + players[2].maxProfit + '\n';   
+        TabPane tabPane = new TabPane();
+        Tab t = new Tab();
+        TextArea ta = new TextArea(s);
+        ta.setDisable(true);
+        t.setContent(ta);
+        tabPane.getTabs().add(t);
+        Popup popup = new Popup(); 
+        tabPane.setStyle(" -fx-background-color: #cfcfcf;-fx-font: 18 algerian;");
         Button btn = new Button("Close");
-        btn.setLayoutX(180);
-        btn.setLayoutY(270);
-        popup.getContent().add(l); 
+        btn.setLayoutX(720);
+        btn.setMinWidth(80);
+        btn.setMinHeight(40);
+        popup.getContent().add(tabPane); 
         popup.getContent().add(btn);
         popup.setAutoHide(true);
-        l.setMinWidth(400); 
-        l.setMinHeight(300);
-        l.setText(str);
+        tabPane.setMinWidth(800); 
+        tabPane.setMinHeight(600);
         popup.show(myStage);
         EventHandler<ActionEvent> closeevent =  new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) {     
@@ -298,21 +324,26 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleNumberOfEntrancesShow(ActionEvent event) {
-        String str = "NUMBER OF ENTRANCES FOR EACH PLAYER" +'\n' + '\n' + '\n' + "Player1 : " + players[0].entrances.size() + '\n'
+        String s = "NUMBER OF ENTRANCES FOR EACH PLAYER" +'\n' + '\n' + '\n' + "Player1 : " + players[0].entrances.size() + '\n'
         + "Player2 : " + players[1].entrances.size() + '\n'
         + "Player3 : " + players[2].entrances.size() + '\n';
-        Popup popup = new Popup();
-        Label l = new Label();
-        l.setStyle(" -fx-background-color: #f2f2f2;-fx-font-weight: bold;");
+        TabPane tabPane = new TabPane();
+        Tab t = new Tab();
+        TextArea ta = new TextArea(s);
+        ta.setDisable(true);
+        t.setContent(ta);
+        tabPane.getTabs().add(t);
+        Popup popup = new Popup(); 
+        tabPane.setStyle(" -fx-background-color: #cfcfcf;-fx-font: 18 algerian;");
         Button btn = new Button("Close");
-        btn.setLayoutX(180);
-        btn.setLayoutY(270);
-        popup.getContent().add(l); 
+        btn.setLayoutX(720);
+        btn.setMinWidth(80);
+        btn.setMinHeight(40);
+        popup.getContent().add(tabPane); 
         popup.getContent().add(btn);
         popup.setAutoHide(true);
-        l.setMinWidth(400); 
-        l.setMinHeight(300);
-        l.setText(str);
+        tabPane.setMinWidth(800); 
+        tabPane.setMinHeight(600);
         popup.show(myStage);
         EventHandler<ActionEvent> closeevent =  new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) {     
@@ -324,10 +355,8 @@ public class InterfaceController implements Initializable {
     private void checkForOtherPlayersOnTheSamePosition (Player p) {
         if(p.name.equals("Player1")) {
             if ((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
-                //System.out.print("HERE1");
                 move(players[0], 1);
                 if ((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
-                    //System.out.print("HERE2");
                     move(players[0], 1);
                 }
             }
@@ -440,7 +469,7 @@ public class InterfaceController implements Initializable {
                     case "F" : r.rec.setFill(Color.GRAY);
                                r.text.setText("FREE");
                                break;
-                    default  : r.rec.setFill(Color.CYAN);
+                    default  : r.rec.setFill(Color.rgb(128, 255, 187));
                                r.text.setText("H" + gameBoard.board[i][j]);
                                break;
                 }
@@ -472,16 +501,122 @@ public class InterfaceController implements Initializable {
         player3.setText("Player3 :" + players[2].credits);
         currentPlayer = players[0];
         showCurrentPlayer(currentPlayer);
-        hotels[0] = new Hotel("FUJIYAMA", 100, 500, 100, 2200, 100, new int[]{1400,1400}, new int[]{100,200}, 500, 400);
-        hotels[1] = new Hotel("L'ETOILE", 3000, 1500, 250, 3300, 150, new int[]{2200,1800,1800,1800}, new int[]{300,300,300,450}, 4000, 750);
-        hotels[2] = new Hotel("ROYAL", 2500, 1250, 300, 3600, 150, new int[]{2600,1800,1800}, new int[]{300,300,450}, 3000, 600);
-        hotels[3] = new Hotel("BIG HOUSE", 3200, 1600, 200, 1800, 200, new int[]{1500,1800}, new int[]{200,300}, 2000, 400);
-        hotels[4] = new Hotel("EAGLES", 1800, 900, 250, 2000, 150, new int[]{1500}, new int[]{250}, 1200, 400);
-        hotels[5] = new Hotel("AFRICA", 1500, 750, 100, 1600, 100, new int[]{1000,1000}, new int[]{150,200}, 1200, 300);
+        hotels[0] = new Hotel("FUJIYAMA", 100, 500, 100, 2200, 100, new int[]{1400,1400}, new int[]{100,200}, 500, 400, 1);
+        hotels[1] = new Hotel("L'ETOILE", 3000, 1500, 250, 3300, 150, new int[]{2200,1800,1800,1800}, new int[]{300,300,300,450}, 4000, 750, 3);
+        hotels[2] = new Hotel("ROYAL", 2500, 1250, 300, 3600, 150, new int[]{2600,1800,1800}, new int[]{300,300,450}, 3000, 600, 5);
+        hotels[3] = new Hotel("BIG HOUSE", 3200, 1600, 200, 1800, 200, new int[]{1500,1800}, new int[]{200,300}, 2000, 400, 9);
+        hotels[4] = new Hotel("EAGLES", 1800, 900, 250, 2000, 150, new int[]{1500}, new int[]{250}, 1200, 400, 10);
+        hotels[5] = new Hotel("AFRICA", 1500, 750, 100, 1600, 100, new int[]{1000,1000}, new int[]{150,200}, 1200, 300, 11);
     }
-    
+    public void clickGrid(javafx.scene.input.MouseEvent event) {
+        Node clickedNode = event.getPickResult().getIntersectedNode();
+        if (clickedNode != gp) {
+            Node parent = clickedNode.getParent();
+            while (parent != gp) {
+                clickedNode = parent;
+                parent = clickedNode.getParent();
+            }
+            plotToBuyY = GridPane.getColumnIndex(clickedNode);
+            plotToBuyX = GridPane.getRowIndex(clickedNode);
+        }
+    }
+    private void checkForAvailablePlot(Player p) {
+       if(gameBoard.boardgrid[p.positionX - 1][p.positionY].text.getText().contains("H")) {
+           if(plot1x == -1) {
+               plot1x = p.positionX - 1;
+               plot1y = p.positionY;
+           }
+           else if (plot1x != p.positionX - 1) {
+               plot2x = p.positionX - 1;
+               plot2y = p.positionY;
+           }
+       }
+       if (gameBoard.boardgrid[p.positionX][p.positionY + 1].text.getText().contains("H")) {
+           if(plot1x == -1) {
+               plot1x = p.positionX;
+               plot1y = p.positionY + 1;
+           }
+           else if (plot1y != p.positionY + 1) {
+               plot2x = p.positionX;
+               plot2y = p.positionY + 1;
+           }
+       }
+       if (gameBoard.boardgrid[p.positionX + 1][p.positionY].text.getText().contains("H")) {
+           if(plot1x == -1) {
+               plot1x = p.positionX + 1;
+               plot1y = p.positionY;
+           }
+           else if (plot1x != p.positionX + 1) {
+               plot2x = p.positionX + 1;
+               plot2y = p.positionY;
+           }
+       }
+       if (gameBoard.boardgrid[p.positionX][p.positionY - 1].text.getText().contains("H")) {
+           if(plot1x == -1) {
+               plot1x = p.positionX;
+               plot1y = p.positionY - 1;
+           }
+           else if (plot1y != p.positionY - 1) {
+               plot2x = p.positionX;
+               plot2y = p.positionY - 1;
+           }
+       }
+       
+       String s = gameBoard.board[plotToBuyX][plotToBuyY];
+       int i = 0;
+       if (((plotToBuyX == plot1x && plotToBuyY == plot1y) || (plotToBuyX == plot2x && plotToBuyY == plot2y))) {
+           for (int k = 0; k < 6; k++) {
+               if(hotels[k].number == Integer.parseInt(s))
+                   i = k;
+           };
+           if (!hotels[i].plot.isConstructed) {
+               
+                if (!hotels[i].plot.isOwned) {
+                    p.credits -= hotels[i].plotCost;
+                    hotels[i].plot.isOwned = true;
+                }
+                else {
+                    p.credits -= hotels[i].requiredPlotCost;
+                }
+                colorPlot(s, p);
+                buyplotmessage.setText("Plot bought");
+                buyplotbutton.setDisable(true);
+           }
+           else {
+               buyplotmessage.setText("Invalid plot");
+           }
+       }
+       else {
+           buyplotmessage.setText("Invalid plot");
+       }
+       plot1x = -1;
+       plot2x = -1;
+       plot1y = -1;
+       plot2y = -1;
+    }
+    void colorPlot(String s, Player p) {
+        Color c;
+        if (p.name.equals("Player1")) {
+            c = Color.BLUE;
+        }
+        else if (p.name.equals("Player2")) {
+            c = Color.RED;
+        }
+        else {
+            c = Color.GREEN;
+        }
+        System.out.println(c);
+        for(int i = 0; i < 12; i++) {
+            for(int j = 0; j < 15; j++) {
+                if (gameBoard.board[i][j].equals(s)) {
+                    gameBoard.boardgrid[i][j].rec.setFill(c);
+                }
+            }
+        }  
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeGame();
-    }    
+    } 
+    
 }
