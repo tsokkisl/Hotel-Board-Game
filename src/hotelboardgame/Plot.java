@@ -8,6 +8,7 @@ package hotelboardgame;
 public class Plot {
     public boolean isOwned;
     public boolean isConstructed;
+    public String owner = "";
     
     public Plot() {
         isOwned = false;
