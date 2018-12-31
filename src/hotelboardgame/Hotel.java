@@ -17,6 +17,8 @@ public class Hotel {
     public int[] upgradeBuildRent;
     public int outsideBuildCost;
     public int maxRent;
+    public int maxUpgradeLevel;
+    public int currentUpgradeLevel;
     public Plot plot;
     
     Hotel(String n, int pc, int rpc, int ec, int bc, int br, int[] ubc, int[] ubr,int obc, int mr, int num) {
@@ -31,6 +33,8 @@ public class Hotel {
         outsideBuildCost = obc;
         maxRent = mr;
         number = num;
+        maxUpgradeLevel = ubc.length;
+        currentUpgradeLevel = 0;
         plot = new Plot();
     }
     
