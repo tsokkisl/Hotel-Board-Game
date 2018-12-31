@@ -13,4 +13,5 @@ public class Rect {
     public StackPane stack = new StackPane();
     public Rectangle rec = new Rectangle();
     public Text text = new Text ("");
+    public boolean hasEntrance = false;
 }
