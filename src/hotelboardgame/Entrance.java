@@ -6,11 +6,14 @@
 package hotelboardgame;
 
 public class Entrance {
-    public Hotel gHotel;
     public int price;
-    public Entrance(Hotel h, int p) {
-        gHotel = h;
+    public int entranceX, entranceY;
+    public String hName;
+    public Entrance(String s, int p, int x, int y) {
+        hName = s;
         price = p;
+        entranceX = x;
+        entranceY = y;
     }
     
 }
