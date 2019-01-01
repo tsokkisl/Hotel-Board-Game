@@ -15,7 +15,7 @@ public class Player {
     public String color;
     public String name;
     public int maxProfit;
-    public Hotel[] hotels = {};
+    public ArrayList<Hotel> hotels = new ArrayList<Hotel>();
     public ArrayList<Entrance> entrances = new ArrayList<Entrance>();
     public int positionX;
     public int positionY;
