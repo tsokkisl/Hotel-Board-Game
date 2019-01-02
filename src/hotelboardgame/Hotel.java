@@ -6,7 +6,7 @@
 package hotelboardgame;
 
 public class Hotel {
-    public Player hotelOwner;
+    public String hotelOwner;
     public String name;
     public int number;
     public int plotCost;
@@ -28,6 +28,7 @@ public class Hotel {
         number = num;
         maxUpgradeLevel = bc.length;
         currentUpgradeLevel = 0;
+        hotelOwner = "None";
         plot = new Plot();
     }
     
