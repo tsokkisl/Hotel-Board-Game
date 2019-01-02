@@ -47,7 +47,7 @@
     </MenuButton>
     <Label fx:id="player3" font="$x3" layoutX="487.0" layoutY="52.0" prefWidth="162.99993896484375" text="" textFill="GREEN" />
     <Label fx:id="player2" font="$x3" layoutX="265.0" layoutY="52.0" prefWidth="174.0" text="" textFill="RED" />
-    <Label font="$x3" layoutX="859.0" layoutY="49.0" prefWidth="226.0" text="Available Hotels: 7" textFill="BLACK" />
+    <Label fx:id="availablehotels" font="$x3" layoutX="859.0" layoutY="49.0" prefWidth="226.0" text="" textFill="BLACK" />
     <Label fx:id="timertext" font="$x3" layoutX="1085.0" layoutY="49.0" prefWidth="185.0" text="Total Time: 00:00" />
     <Button fx:id="rolldicebutton" font="$x3" layoutX="941.0" layoutY="123.0" mnemonicParsing="false" onAction="#handleDiceRoll" prefHeight="76.0" prefWidth="226.0" text="ROLL DICE" textFill="BLACK" />
     <Button fx:id="requestbuildbutton" font="$x3" layoutX="941.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleBuildRequest" prefHeight="76.0" prefWidth="226.0" text="Request building" textFill="BLACK" />
