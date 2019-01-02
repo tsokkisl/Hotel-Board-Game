@@ -24,8 +24,7 @@ public class Player {
     public Circle pawn = new Circle(25);
     public boolean passedBank;
     public boolean passedTownHall;
-    public boolean changedRoundForTownHall;
-    public boolean changedRoundForBank;
+    public boolean hasLost;
     
     Player(String n, String co, int cr, int px, int py, Color f) {
         name = n;
@@ -38,8 +37,7 @@ public class Player {
         prevPositionY = py;
         passedBank = false;
         passedTownHall = false;
-        changedRoundForTownHall = false;
-        changedRoundForBank = false;
+        hasLost = false;
         pawn.setFill(f);
     }
     
