@@ -9,6 +9,7 @@ public class Entrance {
     public int price;
     public int entranceX, entranceY;
     public String hName;
+    public String owner;
     public Entrance(String s, int p, int x, int y) {
         hName = s;
         price = p;
