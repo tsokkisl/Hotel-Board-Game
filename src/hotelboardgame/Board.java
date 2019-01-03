@@ -15,13 +15,13 @@ public class Board {
     public String[][] board = new String[12][15];
     public Rect[][] boardgrid = new Rect[12][15];
     public int startX,bankX,townhallX,startY,bankY,townhallY;
-    private static String cDir = new File("").getAbsolutePath();
+    public static String cDir = new File("").getAbsolutePath();
+    public String folder = "";
     
     public void parseBoard() {
         Random rand = new Random();
         int n = rand.nextInt(2) + 1;
-        String folder = "";
-        
+       
         if (n == 1) folder = "simple";
         else folder = "default";
         
