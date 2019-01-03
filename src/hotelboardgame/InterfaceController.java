@@ -5,6 +5,10 @@
  */
 package hotelboardgame;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,7 +37,7 @@ public class InterfaceController implements Initializable {
     private Player currentPlayer;
     private int turn = 0;
     private Player[] players = new Player[3];
-    private Hotel[] hotels = new Hotel[6];
+    private Hotel[] hotels;
     public static void setStage(Stage stage) {
          myStage = stage;
     }
@@ -132,12 +136,7 @@ public class InterfaceController implements Initializable {
         gameBoard.boardgrid[gameBoard.startX][gameBoard.startY].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
         currentPlayer = players[0];
         showCurrentPlayer(currentPlayer);
-        hotels[0] = new Hotel("FUJIYAMA", 100, 500, 100, new int[]{1400, 1400, 2200, 500}, new int[]{100, 200, 100, 400}, 1);
-        hotels[1] = new Hotel("L'ETOILE", 3000, 1500, 250, new int[]{2200, 1800, 1800, 1800, 3300, 4000}, new int[]{300, 300, 300, 450, 150, 750}, 3);
-        hotels[2] = new Hotel("ROYAL", 2500, 1250, 300, new int[]{2600, 1800, 1800, 3600, 3000}, new int[]{300, 300, 450, 150, 600}, 5);
-        hotels[3] = new Hotel("BIG HOUSE", 3200, 1600, 200, new int[]{1500, 1800, 1800,2000}, new int[]{200, 300, 200, 400}, 9);
-        hotels[4] = new Hotel("EAGLES", 1800, 900, 250, new int[]{1500, 2000, 1200}, new int[]{250, 150, 400}, 10);
-        hotels[5] = new Hotel("AFRICA", 1500, 750, 100,new int[]{1000, 1000, 1600, 1200}, new int[]{150, 200, 100, 300}, 11);
+        parseHotels(gameBoard.folder);
         updateCreditLabels();
         reinitializeFunctionality();
     }
@@ -154,12 +153,12 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleCardShow(ActionEvent event) {
-        Tab[] tabs = new Tab[6];
+        Tab[] tabs = new Tab[hotels.length];
         TabPane tabPane = new TabPane();
         String s = "";
-        for(int i = 0; i < 6; i++) {
+        for(int i = 0; i < hotels.length; i++) {
             tabs[i] = new Tab();
-            tabs[i].setText("Hotel " + (i + 1));
+            tabs[i].setText("Hotel " + hotels[i].number);
             s = hotelDetails(hotels[i]);
             TextArea ta = new TextArea(s);
             ta.setDisable(true);
@@ -169,13 +168,14 @@ public class InterfaceController implements Initializable {
         Popup popup = new Popup(); 
         tabPane.setStyle(" -fx-background-color: #cfcfcf;-fx-font: 18 algerian;");
         Button btn = new Button("Close");
-        btn.setLayoutX(720);
+        btn.setLayoutX(768);
+        btn.setLayoutY(2);
         btn.setMinWidth(80);
         btn.setMinHeight(40);
         popup.getContent().add(tabPane); 
         popup.getContent().add(btn);
         popup.setAutoHide(true);
-        tabPane.setMinWidth(800); 
+        tabPane.setMinWidth(850); 
         tabPane.setMinHeight(600);
         popup.show(myStage);
         EventHandler<ActionEvent> closeevent =  new EventHandler<ActionEvent>() { 
@@ -187,12 +187,12 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleHotelInfoShow(ActionEvent event) {
-        Tab[] tabs = new Tab[6];
+        Tab[] tabs = new Tab[hotels.length];
         TabPane tabPane = new TabPane();
         String s = "";
-        for(int i = 0; i < 6; i++) {
+        for(int i = 0; i < hotels.length; i++) {
             tabs[i] = new Tab();
-            tabs[i].setText("Hotel " + (i + 1));
+            tabs[i].setText("Hotel " + (hotels[i].number));
             s = hotelInfo(hotels[i]);
             TextArea ta = new TextArea(s);
             ta.setDisable(true);
@@ -202,14 +202,14 @@ public class InterfaceController implements Initializable {
         Popup popup = new Popup(); 
         tabPane.setStyle(" -fx-background-color: #cfcfcf;-fx-font: 18 algerian;");
         Button btn = new Button("Close");
-        btn.setLayoutX(620);
+         btn.setLayoutX(768);
         btn.setLayoutY(2);
         btn.setMinWidth(80);
         btn.setMinHeight(40);
         popup.getContent().add(tabPane); 
         popup.getContent().add(btn);
         popup.setAutoHide(true);
-        tabPane.setMinWidth(700); 
+        tabPane.setMinWidth(850); 
         tabPane.setMinHeight(300);
         popup.show(myStage);
         EventHandler<ActionEvent> closeevent =  new EventHandler<ActionEvent>() { 
@@ -262,7 +262,7 @@ public class InterfaceController implements Initializable {
     private void handleBuildRequest(ActionEvent event) {
         String s = gameBoard.board[hotelToBuildX][hotelToBuildY];
         int i = 0;
-        for (int k = 0; k < 6; k++) {
+        for (int k = 0; k < hotels.length; k++) {
                if(hotels[k].number == Integer.parseInt(s))
                    i = k;
         };
@@ -544,12 +544,7 @@ public class InterfaceController implements Initializable {
         updateCreditLabels();
         currentPlayer = players[0];
         showCurrentPlayer(currentPlayer);
-        hotels[0] = new Hotel("FUJIYAMA", 100, 500, 100, new int[]{1400, 1400, 2200, 500}, new int[]{100, 200, 100, 400}, 1);
-        hotels[1] = new Hotel("L'ETOILE", 3000, 1500, 250, new int[]{2200, 1800, 1800, 1800, 3300, 4000}, new int[]{300, 300, 300, 450, 150, 750}, 3);
-        hotels[2] = new Hotel("ROYAL", 2500, 1250, 300, new int[]{2600, 1800, 1800, 3600, 3000}, new int[]{300, 300, 450, 150, 600}, 5);
-        hotels[3] = new Hotel("BIG HOUSE", 3200, 1600, 200, new int[]{1500, 1800, 1800,2000}, new int[]{200, 300, 200, 400}, 9);
-        hotels[4] = new Hotel("EAGLES", 1800, 900, 250, new int[]{1500, 2000, 1200}, new int[]{250, 150, 400}, 10);
-        hotels[5] = new Hotel("AFRICA", 1500, 750, 100,new int[]{1000, 1000, 1600, 1200}, new int[]{150, 200, 100, 300}, 11);
+        parseHotels(gameBoard.folder);
         reinitializeFunctionality();
     }
     public void clickGrid(javafx.scene.input.MouseEvent event) {
@@ -635,7 +630,7 @@ public class InterfaceController implements Initializable {
        String s = gameBoard.board[plotToBuyX][plotToBuyY];
        int i = 0;
        if (((gameBoard.board[plotToBuyX][plotToBuyY].equals(gameBoard.board[plot1x][plot1y])) || (gameBoard.board[plotToBuyX][plotToBuyY].equals(gameBoard.board[plot2x][plot2y])))) {
-           for (int k = 0; k < 6; k++) {
+           for (int k = 0; k < hotels.length; k++) {
                if(hotels[k].number == Integer.parseInt(s))
                    i = k;
            };
@@ -708,7 +703,7 @@ public class InterfaceController implements Initializable {
         int entrancePrice = 0;
         String hotel = "";
         boolean hasHotel = false;
-        for(int k = 0; k < 6; k++) {
+        for(int k = 0; k < hotels.length; k++) {
             if(gameBoard.board[hotelX][hotelY].equals(Integer.toString(hotels[k].number))) {
                 entrancePrice = hotels[k].entranceCost;
                 hotel = hotels[k].name;
@@ -812,7 +807,7 @@ public class InterfaceController implements Initializable {
             p.hotels.add(h);
         }
         else {
-            buildrequest.setText("Hotel has max upgrade level");
+            buildrequest.setText("Hotel is max!");
         }
     }
     private void checkForEntranceAndPay(Player p) {
@@ -907,6 +902,45 @@ public class InterfaceController implements Initializable {
             } 
         };
         btn.setOnAction(closeevent);
+    }  
+    private void parseHotels(String s) {
+        final File folder = new File(gameBoard.cDir + "/src/hotelboardgame/boards/" + s);
+        int numberOfHotels = folder.listFiles().length - 1;
+        hotels = new Hotel[numberOfHotels];
+        int k = 0;
+        for (final File file : folder.listFiles()) {
+            if (!file.getName().equals("board.txt")) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(folder + "/" + file.getName()))) {
+                    String b[] = new String[2];
+                    String name = reader.readLine();
+                    b = reader.readLine().split(",");
+                    int plotCost = Integer.parseInt(b[0]);
+                    int requiredPlotCost = Integer.parseInt(b[1]);
+                    int entranceCost = Integer.parseInt(reader.readLine());
+                    int m = 0;
+                    String line = "";
+                    ArrayList<Integer> bc = new ArrayList<Integer>();
+                    ArrayList<Integer> rc = new ArrayList<Integer>();
+                    while ((line = reader.readLine()) != null) {
+                        String c[] = new String[2];
+                        c = line.split(",");    
+                        bc.add(Integer.parseInt(c[0]));
+                        rc.add(Integer.parseInt(c[1]));
+                        m++;
+                    }
+                    int buildCost[] = new int[m];
+                    int rentCost[] = new int[m];
+                    for (int i = 0; i < bc.size(); i ++) {
+                        buildCost[i] = bc.get(i);
+                        rentCost[i] = rc.get(i);
+                    }
+                    hotels[k] = new Hotel(name, plotCost, requiredPlotCost, entranceCost, buildCost, rentCost, Integer.parseInt(file.getName().substring(0, file.getName().length() - 4)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                  } 
+                k++;
+            }
+        }
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
