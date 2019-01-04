@@ -36,7 +36,7 @@ public class Player {
         prevPositionX = px;
         prevPositionY = py;
         passedBank = false;
-        passedTownHall = false;
+        passedTownHall = true;
         hasLost = false;
         pawn.setFill(f);
     }
