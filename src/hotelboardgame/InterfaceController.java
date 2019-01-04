@@ -18,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -46,6 +48,10 @@ public class InterfaceController implements Initializable {
     private ArrayList<Entrance> randomEntrance = new ArrayList<Entrance>();
     private static int availableHotels;
     private static Paint previousColor;
+    private int seconds = 0;
+    private int minutes = 0;
+    private int hours = 0;
+    private Timer timer = new Timer();
     
     /**
      * Initializes the controller class.
@@ -66,6 +72,8 @@ public class InterfaceController implements Initializable {
     private Label buildentrancemessage;
     @FXML
     private Label availablehotels;
+    @FXML
+    private Label timertext;
     @FXML
     private Button rolldicebutton;
     @FXML
@@ -92,8 +100,6 @@ public class InterfaceController implements Initializable {
         buildrequest.setText("");
         buyplotmessage.setText("");
         buildentrancemessage.setText("");
-        availableHotels = hotels.length;
-        availablehotels.setText("Available Hotels: " + availableHotels);
         for(int i = 0; i < 12; i++) { 
             for(int j = 0; j < 15; j++) {
                 if(gameBoard.boardgrid[i][j].rec.getStroke() == Color.BLACK) {
@@ -138,7 +144,17 @@ public class InterfaceController implements Initializable {
         showCurrentPlayer(currentPlayer);
         parseHotels(gameBoard.folder);
         updateCreditLabels();
+        timertext.setText("Total Time: 00:00:00");
+        availableHotels = hotels.length;
+        availablehotels.setText("Available Hotels: " + availableHotels);
+        timer.cancel();
+        timer.purge();
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
+        timer = new Timer();
         reinitializeFunctionality();
+        startTimer();
     }
     @FXML
     private void handleGameStop(ActionEvent event) {
@@ -150,6 +166,8 @@ public class InterfaceController implements Initializable {
         buyentrancebutton.setDisable(true);
         endroundbutton.setDisable(true);
         //Stop timer
+        timer.cancel();
+        timer.purge();
     }
     @FXML
     private void handleCardShow(ActionEvent event) {
@@ -223,12 +241,13 @@ public class InterfaceController implements Initializable {
     private void handleGameExit(ActionEvent event) {
         //exits game
         Platform.exit();
+        timer.cancel();
     }
     @FXML
     private void handleDiceRoll(ActionEvent event) {
         Random ran = new Random();
         int x = ran.nextInt(6) + 1;
-        if (currentPlayer.name == "Player1") {          
+        if(currentPlayer.name == "Player1") {          
             move(players[0], x);
             checkForOtherPlayersOnTheSamePosition(players[0]);
             gameBoard.boardgrid[players[0].positionX][players[0].positionY].stack.getChildren().addAll(players[0].pawn);
@@ -237,7 +256,7 @@ public class InterfaceController implements Initializable {
             }
             showPlayerActions(players[0]);
         }
-        if (currentPlayer.name == "Player2") {
+        if(currentPlayer.name == "Player2") {
             move(players[1], x);
             checkForOtherPlayersOnTheSamePosition(players[1]);
             gameBoard.boardgrid[players[1].positionX][players[1].positionY].stack.getChildren().addAll(players[1].pawn);
@@ -246,7 +265,7 @@ public class InterfaceController implements Initializable {
             }
             showPlayerActions(players[1]);
         }
-        if (currentPlayer.name == "Player3") {
+        if(currentPlayer.name == "Player3") {
             move(players[2], x);
             checkForOtherPlayersOnTheSamePosition(players[2]);
             gameBoard.boardgrid[players[2].positionX][players[2].positionY].stack.getChildren().addAll(players[2].pawn);
@@ -270,21 +289,21 @@ public class InterfaceController implements Initializable {
             Random ran = new Random();
             int x = ran.nextInt(100) + 1;
             if (x <= 50) {
-                if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                if(currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                else if(currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
                 else buildOrUpgradeHotel(players[2], hotels[i], 1);
             }
             else if(x <= 70) {
                 buildrequest.setText("Declined build");
             }
             else if (x <= 85) {
-                if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                if(currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                else if(currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
                 else buildOrUpgradeHotel(players[2], hotels[i], 1);
             }
             else {
-                if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                if(currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                else if(currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
                 else buildOrUpgradeHotel(players[2], hotels[i], 1);
             }
             requestbuildbutton.setDisable(true);
@@ -301,7 +320,7 @@ public class InterfaceController implements Initializable {
         if (currentPlayer.name.equals("Player1")) {
             checkForAvailablePlot(players[0]);
         }
-        else if (currentPlayer.name.equals("Player2")) {
+        else if(currentPlayer.name.equals("Player2")) {
             checkForAvailablePlot(players[1]);
         }
         else {
@@ -317,15 +336,15 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleRequest1000FromBank(ActionEvent event) {
-        if (currentPlayer.name.equals("Player1")) {
+        if(currentPlayer.name.equals("Player1")) {
             players[0].credits += 1000;
             if(players[0].maxProfit < players[0].credits) players[0].maxProfit = players[0].credits;
         }
-        if (currentPlayer.name.equals("Player2")) {
+        if(currentPlayer.name.equals("Player2")) {
             players[1].credits += 1000;
             if(players[1].maxProfit < players[1].credits) players[1].maxProfit = players[1].credits;
         }
-        if (currentPlayer.name.equals("Player3")) {
+        if(currentPlayer.name.equals("Player3")) {
             players[2].credits += 1000;
             if(players[2].maxProfit < players[2].credits) players[2].maxProfit = players[2].credits;
         }
@@ -335,15 +354,15 @@ public class InterfaceController implements Initializable {
     @FXML
     private void handleEndRound(ActionEvent event) {
         int eliminated = 0, winner = 0;
-        for (int i = 0; i < players.length; i++)
+        for(int i = 0; i < players.length; i++)
             if (players[i].hasLost) eliminated++;
             else winner = i;
-        if (eliminated < 2) {
+        if(eliminated < 2) {
             turn++;
-            if (turn == 3) turn = 0;
+            if(turn == 3) turn = 0;
             while(players[turn].hasLost) {
                 turn++;
-                if (turn == 3) turn = 0;
+                if(turn == 3) turn = 0;
             }
             currentPlayer = players[turn];
             showCurrentPlayer(currentPlayer);
@@ -418,25 +437,25 @@ public class InterfaceController implements Initializable {
     }
     private void checkForOtherPlayersOnTheSamePosition (Player p) {
         if(p.name.equals("Player1")) {
-            if ((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
+            if((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
                 move(players[0], 1);
-                if ((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
+                if((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
                     move(players[0], 1);
                 }
             }
         }
         else if (p.name.equals("Player2")) {
-            if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
+            if((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
                 move(players[1], 1);
-                if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
+                if((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
                    move(players[1], 1);
                 }
             }
         }
         else if (p.name.equals("Player3")) {
-            if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[1].positionX == p.positionX && players[1].positionY == p.positionY)) {
+            if((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[1].positionX == p.positionX && players[1].positionY == p.positionY)) {
                 move(players[2], 1);
-                if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[1].positionX == p.positionX && players[1].positionY == p.positionY)) {
+                if((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[1].positionX == p.positionX && players[1].positionY == p.positionY)) {
                    move(players[2], 1);
                 }
             }
@@ -444,61 +463,75 @@ public class InterfaceController implements Initializable {
     }
     private void showPlayerActions(Player p) {
         //check for townhall
-        if (gameBoard.townhallY <= p.positionY && !p.passedTownHall) {
+        if(gameBoard.townhallY <= p.positionY && !p.passedTownHall) {
             buyentrancebutton.setDisable(false);
             p.passedTownHall = true;
         }
         //check for bank
-        if (gameBoard.bankY >= p.positionY && !p.passedBank) {
+        if(gameBoard.bankY >= p.positionY && !p.passedBank) {
             requestfrombankbutton.setDisable(false);
             p.passedBank = true;
         } 
-        if (gameBoard.board[p.positionX][p.positionY].equals("H")) buyplotbutton.setDisable(false);
-        if (gameBoard.board[p.positionX][p.positionY].equals("E")) {
+        if(gameBoard.board[p.positionX][p.positionY].equals("H")) buyplotbutton.setDisable(false);
+        if(gameBoard.board[p.positionX][p.positionY].equals("E")) {
             buyentrancebutton.setDisable(false);
             requestbuildbutton.setDisable(false);
         }
         endroundbutton.setDisable(false);
     }
     private void showCurrentPlayer(Player p) {
-        if (p.name == "Player1") {player1.setStyle("-fx-background-color: yellow;");}
-        else {player1.setStyle("-fx-background-color: inherit;");}
-        if (p.name == "Player2") {player2.setStyle("-fx-background-color: yellow;");}
-        else {player2.setStyle("-fx-background-color: inherit;");}
-        if (p.name == "Player3") {player3.setStyle("-fx-background-color: yellow;");}
-        else {player3.setStyle("-fx-background-color: inherit;");}
+        if(p.name.equals("Player1")) {
+            player1.setStyle("-fx-background-color: yellow;");
+        }
+        else {
+            player1.setStyle("-fx-background-color: inherit;");
+        }
+        if(p.name.equals("Player2")) {
+            player2.setStyle("-fx-background-color: yellow;");
+        }
+        else {
+            player2.setStyle("-fx-background-color: inherit;");
+        }
+        if(p.name.equals("Player3")) {
+            player3.setStyle("-fx-background-color: yellow;");
+        }
+        else {
+            player3.setStyle("-fx-background-color: inherit;");
+        }
     }
     private void move(Player p, int k) {
         for(int i = 0; i < k; i++) {
-            if ((gameBoard.board[p.positionX][p.positionY + 1].equals("S") || gameBoard.board[p.positionX][p.positionY + 1].equals("B") || gameBoard.board[p.positionX][p.positionY + 1].equals("C") || gameBoard.board[p.positionX][p.positionY + 1].equals("H") || gameBoard.board[p.positionX][p.positionY + 1].equals("E")) && (p.positionY + 1 != p.prevPositionY || p.positionX != p.prevPositionX)) {
+            if((gameBoard.board[p.positionX][p.positionY + 1].equals("S") || gameBoard.board[p.positionX][p.positionY + 1].equals("B") || gameBoard.board[p.positionX][p.positionY + 1].equals("C") || gameBoard.board[p.positionX][p.positionY + 1].equals("H") || gameBoard.board[p.positionX][p.positionY + 1].equals("E")) && (p.positionY + 1 != p.prevPositionY || p.positionX != p.prevPositionX)) {
                 p.prevPositionY = p.positionY;
                 p.prevPositionX = p.positionX;
                 p.positionY++;
             }
-            else if ((gameBoard.board[p.positionX + 1][p.positionY].equals("S") || gameBoard.board[p.positionX + 1][p.positionY].equals("B") || gameBoard.board[p.positionX + 1][p.positionY].equals("C") || gameBoard.board[p.positionX + 1][p.positionY].equals("H") || gameBoard.board[p.positionX + 1][p.positionY].equals("E")) && (p.positionX + 1 != p.prevPositionX || p.positionY != p.prevPositionY)) {         
+            else if((gameBoard.board[p.positionX + 1][p.positionY].equals("S") || gameBoard.board[p.positionX + 1][p.positionY].equals("B") || gameBoard.board[p.positionX + 1][p.positionY].equals("C") || gameBoard.board[p.positionX + 1][p.positionY].equals("H") || gameBoard.board[p.positionX + 1][p.positionY].equals("E")) && (p.positionX + 1 != p.prevPositionX || p.positionY != p.prevPositionY)) {         
                 p.prevPositionY = p.positionY;
                 p.prevPositionX = p.positionX;
                 p.positionX++;
             }
-            else if ((gameBoard.board[p.positionX][p.positionY - 1].equals("S") || gameBoard.board[p.positionX][p.positionY - 1].equals("B") || gameBoard.board[p.positionX][p.positionY - 1].equals("C") || gameBoard.board[p.positionX][p.positionY - 1].equals("H") || gameBoard.board[p.positionX][p.positionY - 1].equals("E")) && (p.positionY - 1 != p.prevPositionY || p.positionX != p.prevPositionX)) {
+            else if((gameBoard.board[p.positionX][p.positionY - 1].equals("S") || gameBoard.board[p.positionX][p.positionY - 1].equals("B") || gameBoard.board[p.positionX][p.positionY - 1].equals("C") || gameBoard.board[p.positionX][p.positionY - 1].equals("H") || gameBoard.board[p.positionX][p.positionY - 1].equals("E")) && (p.positionY - 1 != p.prevPositionY || p.positionX != p.prevPositionX)) {
                 p.prevPositionY = p.positionY;
                 p.prevPositionX = p.positionX;
                 p.positionY--;
             }
-            else if ((gameBoard.board[p.positionX - 1][p.positionY].equals("S") || gameBoard.board[p.positionX - 1][p.positionY].equals("B") || gameBoard.board[p.positionX - 1][p.positionY].equals("C") || gameBoard.board[p.positionX - 1][p.positionY].equals("H") || gameBoard.board[p.positionX - 1][p.positionY].equals("E")) && (p.positionX - 1 != p.prevPositionX || p.positionY != p.prevPositionY)) {
+            else if((gameBoard.board[p.positionX - 1][p.positionY].equals("S") || gameBoard.board[p.positionX - 1][p.positionY].equals("B") || gameBoard.board[p.positionX - 1][p.positionY].equals("C") || gameBoard.board[p.positionX - 1][p.positionY].equals("H") || gameBoard.board[p.positionX - 1][p.positionY].equals("E")) && (p.positionX - 1 != p.prevPositionX || p.positionY != p.prevPositionY)) {
                 p.prevPositionY = p.positionY;
                 p.prevPositionX = p.positionX;
                 p.positionX--;
             }
             if (gameBoard.board[p.positionX][p.positionY].equals("S")) {
-                p.passedTownHall = false;
                 p.passedBank = false;
+            }
+            if (gameBoard.board[p.positionX][p.positionY].equals("C")) {
+                p.passedTownHall = false;
             }
         }
     }
     private void outputBoard() {
-        for (int i = 0; i < 12; i ++){
-            for (int j = 0; j < 15; j++){
+        for(int i = 0; i < 12; i ++){
+            for(int j = 0; j < 15; j++){
                 Rect r = new Rect();
                 r.rec.setWidth(57);
                 r.rec.setHeight(48);
@@ -545,7 +578,11 @@ public class InterfaceController implements Initializable {
         currentPlayer = players[0];
         showCurrentPlayer(currentPlayer);
         parseHotels(gameBoard.folder);
+        timertext.setText("Total Time: 00:00:00");
+        availableHotels = hotels.length;
+        availablehotels.setText("Available Hotels: " + availableHotels);
         reinitializeFunctionality();
+        startTimer();
     }
     public void clickGrid(javafx.scene.input.MouseEvent event) {
         for(int i = 0; i < 12; i++) {
@@ -556,9 +593,9 @@ public class InterfaceController implements Initializable {
             }
         }
         Node clickedNode = event.getPickResult().getIntersectedNode();
-        if (clickedNode != gp) {
+        if(clickedNode != gp) {
             Node parent = clickedNode.getParent();
-            while (parent != gp) {
+            while(parent != gp) {
                 clickedNode = parent;
                 parent = clickedNode.getParent();
             }
@@ -591,12 +628,12 @@ public class InterfaceController implements Initializable {
                plot1x = p.positionX - 1;
                plot1y = p.positionY;
            }
-           else if (plot1x != p.positionX - 1) {
+           else if(plot1x != p.positionX - 1) {
                plot2x = p.positionX - 1;
                plot2y = p.positionY;
            }
        }
-       if (gameBoard.boardgrid[p.positionX][p.positionY + 1].text.getText().contains("H")) {
+       if(gameBoard.boardgrid[p.positionX][p.positionY + 1].text.getText().contains("H")) {
            if(plot1x == -1) {
                plot1x = p.positionX;
                plot1y = p.positionY + 1;
@@ -606,22 +643,22 @@ public class InterfaceController implements Initializable {
                plot2y = p.positionY + 1;
            }
        }
-       if (gameBoard.boardgrid[p.positionX + 1][p.positionY].text.getText().contains("H")) {
+       if(gameBoard.boardgrid[p.positionX + 1][p.positionY].text.getText().contains("H")) {
            if(plot1x == -1) {
                plot1x = p.positionX + 1;
                plot1y = p.positionY;
            }
-           else if (plot1x != p.positionX + 1) {
+           else if(plot1x != p.positionX + 1) {
                plot2x = p.positionX + 1;
                plot2y = p.positionY;
            }
        }
-       if (gameBoard.boardgrid[p.positionX][p.positionY - 1].text.getText().contains("H")) {
+       if(gameBoard.boardgrid[p.positionX][p.positionY - 1].text.getText().contains("H")) {
            if(plot1x == -1) {
                plot1x = p.positionX;
                plot1y = p.positionY - 1;
            }
-           else if (plot1y != p.positionY - 1) {
+           else if(plot1y != p.positionY - 1) {
                plot2x = p.positionX;
                plot2y = p.positionY - 1;
            }
@@ -629,14 +666,14 @@ public class InterfaceController implements Initializable {
        
        String s = gameBoard.board[plotToBuyX][plotToBuyY];
        int i = 0;
-       if (((gameBoard.board[plotToBuyX][plotToBuyY].equals(gameBoard.board[plot1x][plot1y])) || (gameBoard.board[plotToBuyX][plotToBuyY].equals(gameBoard.board[plot2x][plot2y])))) {
-           for (int k = 0; k < hotels.length; k++) {
+       if(((gameBoard.board[plotToBuyX][plotToBuyY].equals(gameBoard.board[plot1x][plot1y])) || (gameBoard.board[plotToBuyX][plotToBuyY].equals(gameBoard.board[plot2x][plot2y])))) {
+           for(int k = 0; k < hotels.length; k++) {
                if(hotels[k].number == Integer.parseInt(s))
                    i = k;
            };
-           if (!hotels[i].plot.isConstructed) {
+           if(!hotels[i].plot.isConstructed) {
                
-                if (!hotels[i].plot.isOwned) {
+                if(!hotels[i].plot.isOwned) {
                     p.credits -= hotels[i].plotCost;
                     hotels[i].plot.isOwned = true;
                 }
@@ -662,10 +699,10 @@ public class InterfaceController implements Initializable {
     }
     private void colorPlot(String s, Player p) {
         Color c;
-        if (p.name.equals("Player1")) {
+        if(p.name.equals("Player1")) {
             c = Color.BLUE;
         }
-        else if (p.name.equals("Player2")) {
+        else if(p.name.equals("Player2")) {
             c = Color.RED;
         }
         else {
@@ -673,7 +710,7 @@ public class InterfaceController implements Initializable {
         }
         for(int i = 0; i < 12; i++) {
             for(int j = 0; j < 15; j++) {
-                if (gameBoard.board[i][j].equals(s)) {
+                if(gameBoard.board[i][j].equals(s)) {
                     gameBoard.boardgrid[i][j].rec.setStroke(c);
                     gameBoard.boardgrid[i][j].rec.setStrokeWidth(2);
                 }
@@ -682,18 +719,18 @@ public class InterfaceController implements Initializable {
     }
     private void colorHotel(Player p, Hotel h) {
         Color c;
-        if (p.name.equals("Player1")) {
-            c = Color.rgb(0, 0, 255, (h.currentUpgradeLevel + 1) * 0.2f);
+        if(p.name.equals("Player1")) {
+            c = Color.rgb(0, 0, 255, (h.currentUpgradeLevel + 1) * 0.15f);
         }
-        else if (p.name.equals("Player2")) {
-            c = Color.rgb(255, 0, 0, (h.currentUpgradeLevel + 1) * 0.2f);
+        else if(p.name.equals("Player2")) {
+            c = Color.rgb(255, 0, 0, (h.currentUpgradeLevel + 1) * 0.15f);
         }
         else {
-            c = Color.rgb(0, 255, 0, (h.currentUpgradeLevel + 1) * 0.2f);
+            c = Color.rgb(0, 255, 0, (h.currentUpgradeLevel + 1) * 0.15f);
         }
         for(int i = 0; i < 12; i++) {
             for(int j = 0; j < 15; j++) {
-                if (gameBoard.board[i][j].equals(Integer.toString(h.number))) {
+                if(gameBoard.board[i][j].equals(Integer.toString(h.number))) {
                     gameBoard.boardgrid[i][j].rec.setFill(c);
                 }
             }
@@ -714,10 +751,10 @@ public class InterfaceController implements Initializable {
                 hasHotel = true;
             }
         }
-        if (hasHotel) {
+        if(hasHotel) {
             for(int i = 0; i < 12; i++) {
                 for(int j = 0; j < 15; j++) {
-                    if (gameBoard.board[i][j].equals("E") && !gameBoard.boardgrid[i][j].hasEntrance) {
+                    if(gameBoard.board[i][j].equals("E") && !gameBoard.boardgrid[i][j].hasEntrance) {
                         if(gameBoard.board[i - 1][j].equals(gameBoard.board[hotelX][hotelY])) {
                             Entrance e = new Entrance(hotel, entrancePrice, i, j); 
                             randomEntrance.add(e);
@@ -740,7 +777,7 @@ public class InterfaceController implements Initializable {
             Random ran = new Random();
             int x = ran.nextInt(randomEntrance.size());
 
-            if (p.name.equals("Player1")) {
+            if(p.name.equals("Player1")) {
                 randomEntrance.get(x).owner = "Player1";
                 players[0].credits -= randomEntrance.get(x).price;
                 players[0].entrances.add(randomEntrance.get(x));
@@ -748,7 +785,7 @@ public class InterfaceController implements Initializable {
                 gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
                 gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
             }
-            if (p.name.equals("Player2")) {
+            if(p.name.equals("Player2")) {
                 randomEntrance.get(x).owner = "Player2";
                 players[1].credits -= randomEntrance.get(x).price;
                 players[1].entrances.add(randomEntrance.get(x));
@@ -756,7 +793,7 @@ public class InterfaceController implements Initializable {
                 gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
                 gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
             }
-            if (p.name.equals("Player3")) {
+            if(p.name.equals("Player3")) {
                 randomEntrance.get(x).owner = "Player3";
                 players[2].credits -= randomEntrance.get(x).price;
                 players[2].entrances.add(randomEntrance.get(x));
@@ -772,8 +809,8 @@ public class InterfaceController implements Initializable {
         }
     }
     public void buildOrUpgradeHotel(Player p, Hotel h, int n) {
-        if (h.currentUpgradeLevel < h.buildCost.length) {
-            if (n == 1) {
+        if(h.currentUpgradeLevel < h.buildCost.length) {
+            if(n == 1) {
                if(p.credits - h.buildCost[h.currentUpgradeLevel] > 0) {
                    p.credits -= h.buildCost[h.currentUpgradeLevel];
                    buildrequest.setText("Accepted build");
@@ -783,11 +820,11 @@ public class InterfaceController implements Initializable {
                    buildrequest.setText("Not enough credits");
                }
             }
-            else if (n == 2) {
+            else if(n == 2) {
                 buildrequest.setText("Free build");
                 colorHotel(p, h);
             }
-            else if (n == 3) {
+            else if(n == 3) {
                 if(p.credits - (h.buildCost[h.currentUpgradeLevel] + (0.15 * h.buildCost[h.currentUpgradeLevel])) > 0) {
                    p.credits -= (h.buildCost[h.currentUpgradeLevel] + (0.15 * h.buildCost[h.currentUpgradeLevel]));
                    buildrequest.setText("Over priced build");
@@ -812,11 +849,11 @@ public class InterfaceController implements Initializable {
     }
     private void checkForEntranceAndPay(Player p) {
         int i,k;
-        if (p.name.equals("Player1")) {
+        if(p.name.equals("Player1")) {
             i = 1;
             k = 2;
         }
-        else if (p.name.equals("Player2")) {
+        else if(p.name.equals("Player2")) {
             i = 0;
             k = 2;
         }
@@ -864,7 +901,7 @@ public class InterfaceController implements Initializable {
     }
     private void checkForEliminatedPlayers() {
         for(int i = 0; i < players.length; i++) {
-            if (players[i].credits <= 0) {
+            if(players[i].credits <= 0) {
                 players[i].hasLost = true;
             }
         }
@@ -908,9 +945,9 @@ public class InterfaceController implements Initializable {
         int numberOfHotels = folder.listFiles().length - 1;
         hotels = new Hotel[numberOfHotels];
         int k = 0;
-        for (final File file : folder.listFiles()) {
-            if (!file.getName().equals("board.txt")) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(folder + "/" + file.getName()))) {
+        for(final File file : folder.listFiles()) {
+            if(!file.getName().equals("board.txt")) {
+                try(BufferedReader reader = new BufferedReader(new FileReader(folder + "/" + file.getName()))) {
                     String b[] = new String[2];
                     String name = reader.readLine();
                     b = reader.readLine().split(",");
@@ -930,7 +967,7 @@ public class InterfaceController implements Initializable {
                     }
                     int buildCost[] = new int[m];
                     int rentCost[] = new int[m];
-                    for (int i = 0; i < bc.size(); i ++) {
+                    for(int i = 0; i < bc.size(); i ++) {
                         buildCost[i] = bc.get(i);
                         rentCost[i] = rc.get(i);
                     }
@@ -941,6 +978,28 @@ public class InterfaceController implements Initializable {
                 k++;
             }
         }
+    }
+    private void startTimer() {
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        seconds++;
+                        if(seconds == 60) {
+                            seconds = 0;
+                            minutes++;
+                        }
+                        if(minutes == 60) {
+                            minutes = 0;
+                            hours++;
+                        }
+                        timertext.setText("Total Time: " + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+                    }
+                });
+            }
+        }, 0, 1000);
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
