@@ -61,7 +61,7 @@
       </font>
     </Label>
     <Label fx:id="buildrequest" layoutX="1205.0" layoutY="223.0" prefHeight="60.0" prefWidth="114.0" text="" textAlignment="CENTER" />
-    <Button fx:id="endroundbutton" font="$x3" layoutX="1061.0" layoutY="614.0" mnemonicParsing="false" onAction="#handleEndRound" prefHeight="55.0" prefWidth="163.0" text="END ROUND" />
+    <Button fx:id="endroundbutton" font="$x3" layoutX="1079.0" layoutY="649.0" minHeight="31.0" mnemonicParsing="false" onAction="#handleEndRound" prefHeight="36.000099999997474" prefWidth="149.0" text="END ROUND" />
     <GridPane fx:id="gp" gridLinesVisible="false" layoutX="6.0" layoutY="88.0" onMouseClicked="#clickGrid" prefHeight="607.0" prefWidth="902.0000999999975">
       <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0" />
@@ -97,5 +97,6 @@
     </GridPane>
     <Label fx:id="buyplotmessage" layoutX="1190.0" layoutY="315.0" prefHeight="54.0" prefWidth="160.0" text="" textAlignment="CENTER" />
     <Label id="buyplotmessage" fx:id="buildentrancemessage" layoutX="1190.0" layoutY="416.0" prefHeight="54.0" prefWidth="160.0" text="" textAlignment="CENTER" />
+    <Label fx:id="creditspayedforstayinginahotel" layoutX="941.0" layoutY="599.0" prefHeight="40.000099999997474" prefWidth="400.0" text="" />
   </children>
 </AnchorPane>
