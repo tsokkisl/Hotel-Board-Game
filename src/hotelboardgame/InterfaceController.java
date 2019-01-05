@@ -75,6 +75,8 @@ public class InterfaceController implements Initializable {
     @FXML
     private Label timertext;
     @FXML
+    private Label creditspayedforstayinginahotel;
+    @FXML
     private Button rolldicebutton;
     @FXML
     private Button requestbuildbutton;
@@ -100,6 +102,7 @@ public class InterfaceController implements Initializable {
         buildrequest.setText("");
         buyplotmessage.setText("");
         buildentrancemessage.setText("");
+        creditspayedforstayinginahotel.setText("");
         for(int i = 0; i < 12; i++) { 
             for(int j = 0; j < 15; j++) {
                 if(gameBoard.boardgrid[i][j].rec.getStroke() == Color.BLACK) {
@@ -720,13 +723,13 @@ public class InterfaceController implements Initializable {
     private void colorHotel(Player p, Hotel h) {
         Color c;
         if(p.name.equals("Player1")) {
-            c = Color.rgb(0, 0, 255, (h.currentUpgradeLevel + 1) * 0.15f);
+            c = Color.rgb(0, 0, 255, (h.currentUpgradeLevel) * 0.15f);
         }
         else if(p.name.equals("Player2")) {
-            c = Color.rgb(255, 0, 0, (h.currentUpgradeLevel + 1) * 0.15f);
+            c = Color.rgb(255, 0, 0, (h.currentUpgradeLevel) * 0.15f);
         }
         else {
-            c = Color.rgb(0, 255, 0, (h.currentUpgradeLevel + 1) * 0.15f);
+            c = Color.rgb(0, 255, 0, (h.currentUpgradeLevel) * 0.15f);
         }
         for(int i = 0; i < 12; i++) {
             for(int j = 0; j < 15; j++) {
@@ -774,35 +777,40 @@ public class InterfaceController implements Initializable {
                     }
                 }
             }
-            Random ran = new Random();
-            int x = ran.nextInt(randomEntrance.size());
+            if(randomEntrance.size() != 0) {
+                Random ran = new Random();
+                int x = ran.nextInt(randomEntrance.size());
 
-            if(p.name.equals("Player1")) {
-                randomEntrance.get(x).owner = "Player1";
-                players[0].credits -= randomEntrance.get(x).price;
-                players[0].entrances.add(randomEntrance.get(x));
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.BLUE);
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
+                if(p.name.equals("Player1")) {
+                    randomEntrance.get(x).owner = "Player1";
+                    players[0].credits -= randomEntrance.get(x).price;
+                    players[0].entrances.add(randomEntrance.get(x));
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.BLUE);
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
+                }
+                if(p.name.equals("Player2")) {
+                    randomEntrance.get(x).owner = "Player2";
+                    players[1].credits -= randomEntrance.get(x).price;
+                    players[1].entrances.add(randomEntrance.get(x));
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.RED);
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
+                }
+                if(p.name.equals("Player3")) {
+                    randomEntrance.get(x).owner = "Player3";
+                    players[2].credits -= randomEntrance.get(x).price;
+                    players[2].entrances.add(randomEntrance.get(x));
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.GREEN);
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
+                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
+                }
+                randomEntrance.clear();
+                updateCreditLabels();
             }
-            if(p.name.equals("Player2")) {
-                randomEntrance.get(x).owner = "Player2";
-                players[1].credits -= randomEntrance.get(x).price;
-                players[1].entrances.add(randomEntrance.get(x));
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.RED);
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
+            else {
+                buildentrancemessage.setText("No available space");
             }
-            if(p.name.equals("Player3")) {
-                randomEntrance.get(x).owner = "Player3";
-                players[2].credits -= randomEntrance.get(x).price;
-                players[2].entrances.add(randomEntrance.get(x));
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.GREEN);
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
-                gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
-            }
-            randomEntrance.clear();
-            updateCreditLabels();
         }
         else {
             buildentrancemessage.setText("No hotel owned");
@@ -867,11 +875,14 @@ public class InterfaceController implements Initializable {
                     if(hotels[l].name.equals(players[i].entrances.get(m).hName)){
                         Random r = new Random();
                         int x = r.nextInt(6) + 1;
-                        p.credits -= hotels[l].rentCost[hotels[l].currentUpgradeLevel] * x;
-                        players[i].credits += hotels[l].rentCost[hotels[l].currentUpgradeLevel] * x;
+                        p.credits -= hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x;
+                        players[i].credits += hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x;
+                        String s = p.name + " stayed at " + hotels[l].name + " hotel owned by " + players[i].name + " for " + x + " night(s) \n with rent " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] + " per night and payed " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits. "
+                                + players[i].name + " got " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits ";
                         if(players[i].credits > players[i].maxProfit) {
                             players[i].maxProfit = players[i].credits;
                         }
+                        creditspayedforstayinginahotel.setText(s);
                         updateCreditLabels();
                     }
                 }
@@ -883,11 +894,14 @@ public class InterfaceController implements Initializable {
                     if(hotels[l].name.equals(players[k].entrances.get(m).hName)){
                         Random r = new Random();
                         int x = r.nextInt(6) + 1;
-                        p.credits -= hotels[l].rentCost[hotels[l].currentUpgradeLevel] * x;
-                        players[k].credits += hotels[l].rentCost[hotels[l].currentUpgradeLevel] * x;
+                        p.credits -= hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x;
+                        players[k].credits += hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x;
+                        String s = p.name + " stayed at " + hotels[l].name + " hotel owned by " + players[k].name + " for " + x + " day(s) \n with rent " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] + " per night and payed " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits. "
+                                + players[k].name + " got " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits ";
                         if(players[k].credits > players[k].maxProfit) {
                             players[k].maxProfit = players[k].credits;
                         }
+                        creditspayedforstayinginahotel.setText(s);
                         updateCreditLabels();
                     }
                 }
