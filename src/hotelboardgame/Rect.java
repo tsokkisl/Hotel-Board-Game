@@ -14,4 +14,5 @@ public class Rect {
     public Rectangle rec = new Rectangle();
     public Text text = new Text ("");
     public boolean hasEntrance = false;
+    public boolean belongsToTheBank = false;
 }
