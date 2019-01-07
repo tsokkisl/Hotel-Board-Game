@@ -1059,7 +1059,7 @@ public class InterfaceController implements Initializable {
         }
         else if (gameBoard.board[p.positionX][p.positionY - 1].equals(Integer.toString(h.number))) {
            return true;
-       }
+        }
         return false;
     }
     @Override
