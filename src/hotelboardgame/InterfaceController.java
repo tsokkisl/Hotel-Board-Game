@@ -288,33 +288,38 @@ public class InterfaceController implements Initializable {
                if (hotels[k].number == Integer.parseInt(s))
                    i = k;
         };
-        if (currentPlayer.name.equals(hotels[i].plot.owner)) {
-            Random ran = new Random();
-            int x = ran.nextInt(100) + 1;
-            if (x <= 50) {
-                if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
-                else buildOrUpgradeHotel(players[2], hotels[i], 1);
-            }
-            else if (x <= 70) {
-                buildrequest.setText("Declined build");
-            }
-            else if (x <= 85) {
-                if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
-                else buildOrUpgradeHotel(players[2], hotels[i], 1);
+        if(entranceBordersWithHotel(currentPlayer, hotels[i])) {
+            if (currentPlayer.name.equals(hotels[i].plot.owner)) {
+                Random ran = new Random();
+                int x = ran.nextInt(100) + 1;
+                if (x <= 50) {
+                    if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                    else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                    else buildOrUpgradeHotel(players[2], hotels[i], 1);
+                }
+                else if (x <= 70) {
+                    buildrequest.setText("Declined build");
+                }
+                else if (x <= 85) {
+                    if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                    else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                    else buildOrUpgradeHotel(players[2], hotels[i], 1);
+                }
+                else {
+                    if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                    else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                    else buildOrUpgradeHotel(players[2], hotels[i], 1);
+                }
+                requestbuildbutton.setDisable(true);
+                buyentrancebutton.setDisable(true);
+                updateCreditLabels();
             }
             else {
-                if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
-                else buildOrUpgradeHotel(players[2], hotels[i], 1);
+                buildrequest.setText("Plot not owned");
             }
-            requestbuildbutton.setDisable(true);
-            buyentrancebutton.setDisable(true);
-            updateCreditLabels();
         }
         else {
-            buildrequest.setText("Plot not owned");
+            buildrequest.setText("Invalid plot");
         }
     }
     @FXML
@@ -1041,6 +1046,21 @@ public class InterfaceController implements Initializable {
                 });
             }
         }, 0, 1000);
+    }
+    private boolean entranceBordersWithHotel(Player p, Hotel h) {
+        if (gameBoard.board[p.positionX - 1][p.positionY].equals(Integer.toString(h.number))) {
+           return true;
+        }
+        else if (gameBoard.board[p.positionX][p.positionY + 1].equals(Integer.toString(h.number))) {
+           return true;
+        }
+        else if (gameBoard.board[p.positionX + 1][p.positionY].equals(Integer.toString(h.number))) {
+           return true;
+        }
+        else if (gameBoard.board[p.positionX][p.positionY - 1].equals(Integer.toString(h.number))) {
+           return true;
+       }
+        return false;
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
