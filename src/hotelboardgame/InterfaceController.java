@@ -684,12 +684,20 @@ public class InterfaceController implements Initializable {
                 if (!hotels[i].plot.isOwned) {
                     p.credits -= hotels[i].plotCost;
                     hotels[i].plot.isOwned = true;
+                    buyplotmessage.setText("Plot bought from " + p.name + "\n and payed " + hotels[i].plotCost + " to bank");
                 }
                 else {
+                    int l = 0;
+                    for (int n = 0; n < players.length; n++) {
+                        if (hotels[i].plot.owner.equals(players[n].name)) {
+                            players[n].credits += hotels[i].requiredPlotCost;
+                            l = n;
+                        }
+                    }
                     p.credits -= hotels[i].requiredPlotCost;
+                    buyplotmessage.setText("Plot bought from " + p.name + "\n and payed " + hotels[i].requiredPlotCost + " to " + players[l].name);
                 }
                 colorPlot(s, p);
-                buyplotmessage.setText("Plot bought");
                 buyplotbutton.setDisable(true);
                 hotels[i].plot.owner = p.name;
            }
@@ -923,6 +931,9 @@ public class InterfaceController implements Initializable {
             if (players[i].credits <= 0) {
                 players[i].hasLost = true;
                 removeHotelsAndEntrances(players[i]);
+                gameBoard.boardgrid[players[i].positionX][players[i].positionY].stack.getChildren().remove(players[i].pawn);
+                players[i].positionX = 0;
+                players[i].positionY = 0;
             }
         }
     }
