@@ -484,6 +484,22 @@ public class InterfaceController implements Initializable {
         if (gameBoard.board[p.positionX][p.positionY].equals("E")) {
             buyentrancebutton.setDisable(false);
             requestbuildbutton.setDisable(false);
+            String s = "", n = "";
+            boolean t = false;
+            if (p.hotels.size() > 0) {
+                s = "Hotels for upgrade : \n";
+                for(int i = 0; i < p.hotels.size(); i++) s += p.hotels.get(i).name + " ";
+                s += "\n\n";
+                
+            }
+            for (int i = 0; i < hotels.length; i++) {
+                if (hotels[i].plot.owner.equals(p.name) && !hotels[i].plot.isConstructed) {
+                   t = true;
+                   n += hotels[i].name + " "; 
+                }
+            }
+            if (t) s += "Plots for build : \n" + n;
+            buildrequest.setText(s);
         }
         endroundbutton.setDisable(false);
     }
