@@ -60,7 +60,7 @@
         <Font size="25.0" fx:id="x4" />
       </font>
     </Label>
-    <Label fx:id="buildrequest" layoutX="1205.0" layoutY="223.0" prefHeight="60.0" prefWidth="114.0" text="" textAlignment="CENTER" />
+    <Label fx:id="buildrequest" layoutX="1181.0" layoutY="215.0" prefHeight="344.0" prefWidth="174.0" text="" textAlignment="CENTER" />
     <Button fx:id="endroundbutton" font="$x3" layoutX="1079.0" layoutY="649.0" minHeight="31.0" mnemonicParsing="false" onAction="#handleEndRound" prefHeight="36.000099999997474" prefWidth="149.0" text="END ROUND" />
     <GridPane fx:id="gp" gridLinesVisible="false" layoutX="6.0" layoutY="88.0" onMouseClicked="#clickGrid" prefHeight="607.0" prefWidth="902.0000999999975">
       <columnConstraints>
