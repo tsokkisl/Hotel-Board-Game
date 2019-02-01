@@ -5,6 +5,7 @@
  */
 package hotelboardgame;
 
+import javafx.scene.image.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -27,6 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Popup;
@@ -98,7 +100,7 @@ public class InterfaceController implements Initializable {
         buyplotbutton.setDisable(true);
         buyentrancebutton.setDisable(true);
         endroundbutton.setDisable(true);
-        dicerollresult.setText("");
+        dicerollresult.setGraphic(null);
         buildrequest.setText("");
         buyplotmessage.setText("");
         buildentrancemessage.setText("");
@@ -277,7 +279,22 @@ public class InterfaceController implements Initializable {
             }
             showPlayerActions(players[2]);
         }
-        dicerollresult.setText(Integer.toString(x));
+        String imgPath = "";
+        switch(x) {
+            case 1: imgPath = "dice/1.png";
+                    break;
+            case 2: imgPath = "dice/2.png";
+                    break;
+            case 3: imgPath = "dice/3.png";
+                    break;
+            case 4: imgPath = "dice/4.png";
+                    break;
+            case 5: imgPath = "dice/5.png";
+                    break;
+            case 6: imgPath = "dice/6.png";
+                    break;
+        }
+        dicerollresult.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(imgPath))));
         rolldicebutton.setDisable(true);        
     }
     @FXML
@@ -563,8 +580,10 @@ public class InterfaceController implements Initializable {
                     case "S" : r.rec.setFill(Color.BLACK);
                                break;
                     case "C" : r.rec.setFill(Color.BROWN);
+                               r.image = new ImageView(new Image(getClass().getResourceAsStream("special-buildings/townhall.png")));
                                break;
                     case "B" : r.rec.setFill(Color.ORANGE);
+                               r.image = new ImageView(new Image(getClass().getResourceAsStream("special-buildings/bank.png")));
                                break;
                     case "H" : r.rec.setFill(Color.PURPLE);
                                break;
@@ -577,6 +596,8 @@ public class InterfaceController implements Initializable {
                                break;
                 }
                 r.stack.getChildren().addAll(r.rec, r.text);
+                if (gameBoard.board[i][j].equals("B")) r.stack.getChildren().addAll(r.image);
+                else if (gameBoard.board[i][j].equals("C")) r.stack.getChildren().addAll(r.image);
                 gameBoard.boardgrid[i][j] = r;
                 GridPane.setRowIndex(r.stack, i);
                 GridPane.setColumnIndex(r.stack, j);
