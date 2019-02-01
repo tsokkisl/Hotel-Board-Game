@@ -5,6 +5,7 @@
  */
 package hotelboardgame;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -13,6 +14,7 @@ public class Rect {
     public StackPane stack = new StackPane();
     public Rectangle rec = new Rectangle();
     public Text text = new Text ("");
+    public ImageView image;
     public boolean hasEntrance = false;
     public boolean belongsToTheBank = false;
 }
