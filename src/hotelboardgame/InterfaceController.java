@@ -160,6 +160,7 @@ public class InterfaceController implements Initializable {
         timer = new Timer();
         reinitializeFunctionality();
         startTimer();
+        howToPlay();
     }
     @FXML
     private void handleGameStop(ActionEvent event) {
@@ -1109,6 +1110,40 @@ public class InterfaceController implements Initializable {
            return true;
         }
         return false;
+    }
+    public static void howToPlay() {
+        String s = "1) Roll the dice \n"
+                + "2) You can either build/upgrade a hotel, buy a plot or build an entrance\n"
+                + "3) Click on the grid to choose a hotel, a plot or a cell for entrance\n"
+                + "4) After you finish your moves click on the end round button\n"
+                + "5) Click on GAME or STATISTICS menus to obtain information \nabout the players and the hotels\n\n"
+                + "HAVE FUN!!!";
+        TabPane tabPane = new TabPane();
+        Tab t = new Tab();
+        TextArea ta = new TextArea(s);
+        ta.setDisable(true);
+        t.setText("How To Play");
+        t.setContent(ta);
+        tabPane.getTabs().add(t);
+        Popup popup = new Popup(); 
+        tabPane.setStyle(" -fx-background-color: #cfcfcf;-fx-font: 18 algerian;");
+        Button btn = new Button("Close");
+        btn.setLayoutX(710);
+        btn.setLayoutY(2);
+        btn.setMinWidth(80);
+        btn.setMinHeight(40);
+        popup.getContent().add(tabPane); 
+        popup.getContent().add(btn);
+        popup.setAutoHide(true);
+        tabPane.setMinWidth(800); 
+        tabPane.setMinHeight(600);
+        popup.show(myStage);
+        EventHandler<ActionEvent> closeevent =  new EventHandler<ActionEvent>() { 
+            public void handle(ActionEvent e) {     
+                popup.hide(); 
+            } 
+        };
+        btn.setOnAction(closeevent);
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
