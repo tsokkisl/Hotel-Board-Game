@@ -15,13 +15,14 @@ public class HotelBoardGame extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("Interface.fxml"));
         InterfaceController.setStage(stage);
+        Parent root = FXMLLoader.load(getClass().getResource("Interface.fxml"));
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
         stage.show();
         stage.setTitle("MediaLab Hotel");
+        InterfaceController.howToPlay();
     }
 
     /**
