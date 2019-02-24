@@ -968,6 +968,8 @@ public class InterfaceController implements Initializable {
         for (int i = 0; i < players.length; i++) {
             if (players[i].credits <= 0) {
                 players[i].hasLost = true;
+                players[i].credits = 0;
+                updateCreditLabels();
                 removeHotelsAndEntrances(players[i]);
                 gameBoard.boardgrid[players[i].positionX][players[i].positionY].stack.getChildren().remove(players[i].pawn);
                 players[i].positionX = 0;
