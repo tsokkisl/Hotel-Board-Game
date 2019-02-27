@@ -139,12 +139,12 @@ public class InterfaceController implements Initializable {
             }
         }
         setUpGameBoard();
-        startingPositionX = gameBoard.startX;
-        startingPositionY = gameBoard.startY;
+        startingPositionX = gameBoard.getStartX();
+        startingPositionY = gameBoard.getStartY();
         players[0] = new Player("Player1", "Blue", 12000, startingPositionX, startingPositionY, Color.BLUE);
         players[1] = new Player("Player2", "Red", 12000, startingPositionX, startingPositionY, Color.RED);
         players[2] = new Player("Player3", "Green", 12000, startingPositionX, startingPositionY, Color.GREEN);
-        gameBoard.boardgrid[gameBoard.startX][gameBoard.startY].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
+        gameBoard.boardgrid[gameBoard.getStartX()][gameBoard.getStartY()].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
         currentPlayer = players[0];
         showCurrentPlayer(currentPlayer);
         parseHotels(gameBoard.folder);
@@ -253,7 +253,7 @@ public class InterfaceController implements Initializable {
     private void handleDiceRoll(ActionEvent event) {
         Random ran = new Random();
         int x = ran.nextInt(6) + 1;
-        if (currentPlayer.name.equals("Player1")) {          
+        if (currentPlayer.getName().equals("Player1")) {          
             move(players[0], x);
             checkForOtherPlayersOnTheSamePosition(players[0]);
             gameBoard.boardgrid[players[0].positionX][players[0].positionY].stack.getChildren().addAll(players[0].pawn);
@@ -262,7 +262,7 @@ public class InterfaceController implements Initializable {
             }
             showPlayerActions(players[0]);
         }
-        if (currentPlayer.name.equals("Player2")) {
+        if (currentPlayer.getName().equals("Player2")) {
             move(players[1], x);
             checkForOtherPlayersOnTheSamePosition(players[1]);
             gameBoard.boardgrid[players[1].positionX][players[1].positionY].stack.getChildren().addAll(players[1].pawn);
@@ -271,7 +271,7 @@ public class InterfaceController implements Initializable {
             }
             showPlayerActions(players[1]);
         }
-        if (currentPlayer.name.equals("Player3")) {
+        if (currentPlayer.getName().equals("Player3")) {
             move(players[2], x);
             checkForOtherPlayersOnTheSamePosition(players[2]);
             gameBoard.boardgrid[players[2].positionX][players[2].positionY].stack.getChildren().addAll(players[2].pawn);
@@ -307,25 +307,25 @@ public class InterfaceController implements Initializable {
                    i = k;
         };
         if(entranceBordersWithHotel(currentPlayer, hotels[i])) {
-            if (currentPlayer.name.equals(hotels[i].plot.owner)) {
+            if (currentPlayer.getName().equals(hotels[i].plot.getOwner())) {
                 Random ran = new Random();
                 int x = ran.nextInt(100) + 1;
                 if (x <= 50) {
-                    if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                    else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                    if (currentPlayer.getName().equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                    else if (currentPlayer.getName().equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
                     else buildOrUpgradeHotel(players[2], hotels[i], 1);
                 }
                 else if (x <= 70) {
                     buildrequest.setText("Declined build");
                 }
                 else if (x <= 85) {
-                    if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                    else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                    if (currentPlayer.getName().equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                    else if (currentPlayer.getName().equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
                     else buildOrUpgradeHotel(players[2], hotels[i], 1);
                 }
                 else {
-                    if (currentPlayer.name.equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
-                    else if (currentPlayer.name.equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
+                    if (currentPlayer.getName().equals("Player1"))buildOrUpgradeHotel(players[0], hotels[i], 1);
+                    else if (currentPlayer.getName().equals("Player2"))buildOrUpgradeHotel(players[1], hotels[i], 1);
                     else buildOrUpgradeHotel(players[2], hotels[i], 1);
                 }
                 requestbuildbutton.setDisable(true);
@@ -343,10 +343,10 @@ public class InterfaceController implements Initializable {
     @FXML
     private void handleBuyPlot(ActionEvent event) {
         
-        if (currentPlayer.name.equals("Player1")) {
+        if (currentPlayer.getName().equals("Player1")) {
             checkForAvailablePlot(players[0]);
         }
-        else if (currentPlayer.name.equals("Player2")) {
+        else if (currentPlayer.getName().equals("Player2")) {
             checkForAvailablePlot(players[1]);
         }
         else {
@@ -362,17 +362,17 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleRequest1000FromBank(ActionEvent event) {
-        if (currentPlayer.name.equals("Player1")) {
-            players[0].credits += 1000;
-            if (players[0].maxProfit < players[0].credits) players[0].maxProfit = players[0].credits;
+        if (currentPlayer.getName().equals("Player1")) {
+            players[0].setCredits(players[0].getCredits() + 1000);
+            if (players[0].getMaxProfit() < players[0].getCredits()) players[0].setMaxProfit(players[0].getCredits());
         }
-        if (currentPlayer.name.equals("Player2")) {
-            players[1].credits += 1000;
-            if (players[1].maxProfit < players[1].credits) players[1].maxProfit = players[1].credits;
+        if (currentPlayer.getName().equals("Player2")) {
+            players[1].setCredits(players[1].getCredits() + 1000);
+            if (players[1].getMaxProfit() < players[1].getCredits()) players[1].setMaxProfit(players[1].getCredits());
         }
-        if (currentPlayer.name.equals("Player3")) {
-            players[2].credits += 1000;
-            if (players[2].maxProfit < players[2].credits) players[2].maxProfit = players[2].credits;
+        if (currentPlayer.getName().equals("Player3")) {
+            players[2].setCredits(players[2].getCredits() + 1000);
+            if (players[2].getMaxProfit() < players[2].getCredits()) players[2].setMaxProfit(players[2].getCredits());
         }
         updateCreditLabels();
         requestfrombankbutton.setDisable(true);
@@ -382,12 +382,12 @@ public class InterfaceController implements Initializable {
         int eliminated = 0, winner = 0;
         checkForEliminatedPlayers();
         for (int i = 0; i < players.length; i++)
-            if (players[i].hasLost) eliminated++;
+            if (players[i].getHasLost()) eliminated++;
             else winner = i;
         if (eliminated < 2) {
             turn++;
             if (turn == 3) turn = 0;
-            while (players[turn].hasLost) {
+            while (players[turn].getHasLost()) {
                 turn++;
                 if (turn == 3) turn = 0;
             }
@@ -401,9 +401,9 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleMaxProfitShow(ActionEvent event) {
-        String s = "MAX PROFIT OF PLAYERS" +'\n' + '\n' + '\n' + "Player1 : " + players[0].maxProfit + '\n'
-        + "Player2 : " + players[1].maxProfit + '\n'
-        + "Player3 : " + players[2].maxProfit + '\n';   
+        String s = "MAX PROFIT OF PLAYERS" +'\n' + '\n' + '\n' + "Player1 : " + players[0].getMaxProfit() + '\n'
+        + "Player2 : " + players[1].getMaxProfit() + '\n'
+        + "Player3 : " + players[2].getMaxProfit() + '\n';   
         TabPane tabPane = new TabPane();
         Tab t = new Tab();
         TextArea ta = new TextArea(s);
@@ -462,7 +462,7 @@ public class InterfaceController implements Initializable {
         btn.setOnAction(closeevent);
     }
     private void checkForOtherPlayersOnTheSamePosition (Player p) {
-        if (p.name.equals("Player1")) {
+        if (p.getName().equals("Player1")) {
             if ((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
                 move(players[0], 1);
                 if ((players[1].positionX == p.positionX && players[1].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
@@ -470,7 +470,7 @@ public class InterfaceController implements Initializable {
                 }
             }
         }
-        else if (p.name.equals("Player2")) {
+        else if (p.getName().equals("Player2")) {
             if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
                 move(players[1], 1);
                 if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[2].positionX == p.positionX && players[2].positionY == p.positionY)) {
@@ -478,7 +478,7 @@ public class InterfaceController implements Initializable {
                 }
             }
         }
-        else if (p.name.equals("Player3")) {
+        else if (p.getName().equals("Player3")) {
             if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[1].positionX == p.positionX && players[1].positionY == p.positionY)) {
                 move(players[2], 1);
                 if ((players[0].positionX == p.positionX && players[0].positionY == p.positionY) || (players[1].positionX == p.positionX && players[1].positionY == p.positionY)) {
@@ -489,14 +489,14 @@ public class InterfaceController implements Initializable {
     }
     private void showPlayerActions(Player p) {
         //check for townhall
-        if (gameBoard.townhallY <= p.positionY && !p.passedTownHall) {
+        if (gameBoard.getTownhallY() <= p.positionY && !p.getPassedTownHall()) {
             buyentrancebutton.setDisable(false);
-            p.passedTownHall = true;
+            p.setPassedTownHall(true);
         }
         //check for bank
-        if (gameBoard.bankY >= p.positionY && !p.passedBank) {
+        if (gameBoard.getBankY() >= p.positionY && !p.getPassedBank()) {
             requestfrombankbutton.setDisable(false);
-            p.passedBank = true;
+            p.setPassedBank(true);
         } 
         if (gameBoard.board[p.positionX][p.positionY].equals("H")) buyplotbutton.setDisable(false);
         if (gameBoard.board[p.positionX][p.positionY].equals("E")) {
@@ -506,12 +506,16 @@ public class InterfaceController implements Initializable {
             boolean t = false;
             if (p.hotels.size() > 0) {
                 s = "Hotels for upgrade : \n";
-                for(int i = 0; i < p.hotels.size(); i++) s += p.hotels.get(i).name + " ";
+                for(int i = 0; i < p.hotels.size(); i++) {
+                    if (p.hotels.get(i).currentUpgradeLevel < p.hotels.get(i).maxUpgradeLevel) {
+                        s += p.hotels.get(i).name + " ";
+                    }
+                }
                 s += "\n\n";
                 
             }
             for (int i = 0; i < hotels.length; i++) {
-                if (hotels[i].plot.owner.equals(p.name) && !hotels[i].plot.isConstructed) {
+                if (hotels[i].plot.getOwner().equals(p.getName()) && !hotels[i].plot.getIsConstructed()) {
                    t = true;
                    n += hotels[i].name + " "; 
                 }
@@ -522,19 +526,19 @@ public class InterfaceController implements Initializable {
         endroundbutton.setDisable(false);
     }
     private void showCurrentPlayer(Player p) {
-        if (p.name.equals("Player1")) {
+        if (p.getName().equals("Player1")) {
             player1.setStyle("-fx-background-color: yellow;");
         }
         else {
             player1.setStyle("-fx-background-color: inherit;");
         }
-        if (p.name.equals("Player2")) {
+        if (p.getName().equals("Player2")) {
             player2.setStyle("-fx-background-color: yellow;");
         }
         else {
             player2.setStyle("-fx-background-color: inherit;");
         }
-        if (p.name.equals("Player3")) {
+        if (p.getName().equals("Player3")) {
             player3.setStyle("-fx-background-color: yellow;");
         }
         else {
@@ -564,10 +568,10 @@ public class InterfaceController implements Initializable {
                 p.positionX--;
             }
             if (gameBoard.board[p.positionX][p.positionY].equals("S")) {
-                p.passedBank = false;
+                p.setPassedBank(false);
             }
             if (gameBoard.board[p.positionX][p.positionY].equals("C")) {
-                p.passedTownHall = false;
+                p.setPassedTownHall(false);
             }
         }
     }
@@ -592,11 +596,11 @@ public class InterfaceController implements Initializable {
                                break;
                     case "F" : r.rec.setFill(Color.GRAY);
                                break;
-                    default  : r.rec.setFill(Color.rgb(204, 255, 204));
-                               r.text.setText("H" + gameBoard.board[i][j]);
+                    default  : r.rec.setFill(Color.rgb(255, 255, 255));
+                               r.getText().setText("H" + gameBoard.board[i][j]);
                                break;
                 }
-                r.stack.getChildren().addAll(r.rec, r.text);
+                r.stack.getChildren().addAll(r.rec, r.getText());
                 if (gameBoard.board[i][j].equals("B")) r.stack.getChildren().addAll(r.image);
                 else if (gameBoard.board[i][j].equals("C")) r.stack.getChildren().addAll(r.image);
                 gameBoard.boardgrid[i][j] = r;
@@ -614,12 +618,12 @@ public class InterfaceController implements Initializable {
     }
     private void initializeGame() {
         setUpGameBoard();
-        startingPositionX = gameBoard.startX;
-        startingPositionY = gameBoard.startY;
+        startingPositionX = gameBoard.getStartX();
+        startingPositionY = gameBoard.getStartY();
         players[0] = new Player("Player1", "Blue", 12000, startingPositionX, startingPositionY, Color.BLUE);
         players[1] = new Player("Player2", "Red", 12000, startingPositionX, startingPositionY, Color.RED);
         players[2] = new Player("Player3", "Green", 12000, startingPositionX, startingPositionY, Color.GREEN);
-        gameBoard.boardgrid[gameBoard.startX][gameBoard.startY].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
+        gameBoard.boardgrid[gameBoard.getStartX()][gameBoard.getStartY()].stack.getChildren().addAll(players[2].pawn, players[1].pawn, players[0].pawn);
         updateCreditLabels();
         currentPlayer = players[0];
         showCurrentPlayer(currentPlayer);
@@ -652,7 +656,7 @@ public class InterfaceController implements Initializable {
             hotelToBuildX = plotToBuyX;
             hotelToBuildY = plotToBuyY;
         }
-        if (!gameBoard.boardgrid[plotToBuyX][plotToBuyY].text.getText().contains("H")) {
+        if (!gameBoard.boardgrid[plotToBuyX][plotToBuyY].getText().getText().contains("H")) {
             gameBoard.boardgrid[plotToBuyX][plotToBuyY].rec.setStroke(Color.BLACK);
             gameBoard.boardgrid[plotToBuyX][plotToBuyY].rec.setStrokeWidth(2);
         }
@@ -669,7 +673,7 @@ public class InterfaceController implements Initializable {
         }
     }
     private void checkForAvailablePlot(Player p) {
-       if (gameBoard.boardgrid[p.positionX - 1][p.positionY].text.getText().contains("H")) {
+       if (gameBoard.boardgrid[p.positionX - 1][p.positionY].getText().getText().contains("H")) {
            if (plot1x == -1) {
                plot1x = p.positionX - 1;
                plot1y = p.positionY;
@@ -679,7 +683,7 @@ public class InterfaceController implements Initializable {
                plot2y = p.positionY;
            }
        }
-       if (gameBoard.boardgrid[p.positionX][p.positionY + 1].text.getText().contains("H")) {
+       if (gameBoard.boardgrid[p.positionX][p.positionY + 1].getText().getText().contains("H")) {
            if (plot1x == -1) {
                plot1x = p.positionX;
                plot1y = p.positionY + 1;
@@ -689,7 +693,7 @@ public class InterfaceController implements Initializable {
                plot2y = p.positionY + 1;
            }
        }
-       if (gameBoard.boardgrid[p.positionX + 1][p.positionY].text.getText().contains("H")) {
+       if (gameBoard.boardgrid[p.positionX + 1][p.positionY].getText().getText().contains("H")) {
            if (plot1x == -1) {
                plot1x = p.positionX + 1;
                plot1y = p.positionY;
@@ -699,7 +703,7 @@ public class InterfaceController implements Initializable {
                plot2y = p.positionY;
            }
        }
-       if (gameBoard.boardgrid[p.positionX][p.positionY - 1].text.getText().contains("H")) {
+       if (gameBoard.boardgrid[p.positionX][p.positionY - 1].getText().getText().contains("H")) {
            if (plot1x == -1) {
                plot1x = p.positionX;
                plot1y = p.positionY - 1;
@@ -717,27 +721,32 @@ public class InterfaceController implements Initializable {
                if (hotels[k].number == Integer.parseInt(s))
                    i = k;
            }
-           if (!hotels[i].plot.isConstructed) {
+           if (!hotels[i].plot.getIsConstructed()) {
                
-                if (!hotels[i].plot.isOwned) {
-                    p.credits -= hotels[i].plotCost;
-                    hotels[i].plot.isOwned = true;
-                    buyplotmessage.setText("Plot bought from " + p.name + "\n and payed " + hotels[i].plotCost + " to bank");
+                if (!hotels[i].plot.getIsOwned()) {
+                    p.setCredits(p.getCredits()- hotels[i].plotCost);
+                    hotels[i].plot.setIsOwned(true);
+                    buyplotmessage.setText(p.getName() + " bought plot \n and payed " + hotels[i].plotCost + " to bank");
                 }
                 else {
                     int l = 0;
                     for (int n = 0; n < players.length; n++) {
-                        if (hotels[i].plot.owner.equals(players[n].name)) {
-                            players[n].credits += hotels[i].requiredPlotCost;
+                        if (hotels[i].plot.getOwner().equals(players[n].getName())) {
                             l = n;
                         }
                     }
-                    p.credits -= hotels[i].requiredPlotCost;
-                    buyplotmessage.setText("Plot bought from " + p.name + "\n and payed " + hotels[i].requiredPlotCost + " to " + players[l].name);
+                    if (!p.getName().equals(players[l].getName())) {
+                        p.setCredits(p.getCredits() - hotels[i].requiredPlotCost);
+                        players[l].setCredits(players[l].getCredits() + hotels[i].requiredPlotCost);
+                        buyplotmessage.setText(p.getName() + " bought plot \n and payed " + hotels[i].requiredPlotCost + " to " + players[l].getName());
+                    }
+                    else {
+                        buyplotmessage.setText("Plot already owned!");
+                    }
                 }
                 colorPlot(s, p);
                 buyplotbutton.setDisable(true);
-                hotels[i].plot.owner = p.name;
+                hotels[i].plot.setOwner(p.getName());
            }
            else {
                buyplotmessage.setText("Plot already constructed");
@@ -753,10 +762,10 @@ public class InterfaceController implements Initializable {
     }
     private void colorPlot(String s, Player p) {
         Color c;
-        if (p.name.equals("Player1")) {
+        if (p.getName().equals("Player1")) {
             c = Color.BLUE;
         }
-        else if (p.name.equals("Player2")) {
+        else if (p.getName().equals("Player2")) {
             c = Color.RED;
         }
         else {
@@ -773,14 +782,14 @@ public class InterfaceController implements Initializable {
     }
     private void colorHotel(Player p, Hotel h) {
         Color c;
-        if (p.name.equals("Player1")) {
-            c = Color.rgb(0, 0, 255, (h.currentUpgradeLevel) * 0.15f);
+        if (p.getName().equals("Player1")) {
+            c = Color.rgb(0, 0, 255, (h.currentUpgradeLevel) * 0.20f);
         }
-        else if (p.name.equals("Player2")) {
-            c = Color.rgb(255, 0, 0, (h.currentUpgradeLevel) * 0.15f);
+        else if (p.getName().equals("Player2")) {
+            c = Color.rgb(255, 0, 0, (h.currentUpgradeLevel) * 0.20f);
         }
         else {
-            c = Color.rgb(0, 255, 0, (h.currentUpgradeLevel) * 0.15f);
+            c = Color.rgb(0, 255, 0, (h.currentUpgradeLevel) * 0.20f);
         }
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 15; j++) {
@@ -808,7 +817,7 @@ public class InterfaceController implements Initializable {
         if (hasHotel) {
             for (int i = 0; i < 12; i++) {
                 for (int j = 0; j < 15; j++) {
-                    if (gameBoard.board[i][j].equals("E") && !gameBoard.boardgrid[i][j].hasEntrance && !gameBoard.boardgrid[i][j].belongsToTheBank) {
+                    if (gameBoard.board[i][j].equals("E") && !gameBoard.boardgrid[i][j].getHasEntrance() && !gameBoard.boardgrid[i][j].getBelongsToTheBank()) {
                         if (gameBoard.board[i - 1][j].equals(gameBoard.board[hotelX][hotelY])) {
                             Entrance e = new Entrance(hotel, entrancePrice, i, j); 
                             randomEntrance.add(e);
@@ -828,34 +837,32 @@ public class InterfaceController implements Initializable {
                     }
                 }
             }
-            if (randomEntrance.size() != 0) {
+            if (!randomEntrance.isEmpty()) {
                 Random ran = new Random();
                 int x = ran.nextInt(randomEntrance.size());
 
-                if (p.name.equals("Player1")) {
-                    randomEntrance.get(x).owner = "Player1";
-                    players[0].credits -= randomEntrance.get(x).price;
+                if (p.getName().equals("Player1")) {
+                    randomEntrance.get(x).setOwner("Player1");
+                    players[0].setCredits(players[0].getCredits() - randomEntrance.get(x).getPrice());
                     players[0].entrances.add(randomEntrance.get(x));
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.BLUE);
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
+                    gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].image = new ImageView(new Image(getClass().getResourceAsStream("special-buildings/bgate.png")));
+                    gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].setHasEntrance(true);
                 }
-                if (p.name.equals("Player2")) {
-                    randomEntrance.get(x).owner = "Player2";
-                    players[1].credits -= randomEntrance.get(x).price;
+                if (p.getName().equals("Player2")) {
+                    randomEntrance.get(x).setOwner("Player2");
+                    players[1].setCredits(players[1].getCredits() - randomEntrance.get(x).getPrice());
                     players[1].entrances.add(randomEntrance.get(x));
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.RED);
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
+                    gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].image = new ImageView(new Image(getClass().getResourceAsStream("special-buildings/rgate.png")));
+                    gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].setHasEntrance(true);
                 }
-                if (p.name.equals("Player3")) {
-                    randomEntrance.get(x).owner = "Player3";
-                    players[2].credits -= randomEntrance.get(x).price;
+                if (p.getName().equals("Player3")) {
+                    randomEntrance.get(x).setOwner("Player3");
+                    players[2].setCredits(players[2].getCredits() - randomEntrance.get(x).getPrice());
                     players[2].entrances.add(randomEntrance.get(x));
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStroke(Color.GREEN);
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].rec.setStrokeWidth(2);
-                    gameBoard.boardgrid[randomEntrance.get(x).entranceX][randomEntrance.get(x).entranceY].hasEntrance = true;
+                    gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].image = new ImageView(new Image(getClass().getResourceAsStream("special-buildings/ggate.png")));
+                    gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].setHasEntrance(true);
                 }
+                gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].stack.getChildren().addAll( gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].image);
                 randomEntrance.clear();
                 updateCreditLabels();
             }
@@ -870,8 +877,8 @@ public class InterfaceController implements Initializable {
     public void buildOrUpgradeHotel(Player p, Hotel h, int n) {
         if (h.currentUpgradeLevel < h.buildCost.length) {
             if (n == 1) {
-               if (p.credits - h.buildCost[h.currentUpgradeLevel] > 0) {
-                   p.credits -= h.buildCost[h.currentUpgradeLevel];
+               if (p.getCredits() - h.buildCost[h.currentUpgradeLevel] > 0) {
+                   p.setCredits(p.getCredits() - h.buildCost[h.currentUpgradeLevel]);
                    buildrequest.setText("Accepted build");
                    colorHotel(p, h);
                }
@@ -884,8 +891,8 @@ public class InterfaceController implements Initializable {
                 colorHotel(p, h);
             }
             else if (n == 3) {
-                if (p.credits - (h.buildCost[h.currentUpgradeLevel] + (0.15 * h.buildCost[h.currentUpgradeLevel])) > 0) {
-                   p.credits -= (h.buildCost[h.currentUpgradeLevel] + (0.15 * h.buildCost[h.currentUpgradeLevel]));
+                if (p.getCredits() - (h.buildCost[h.currentUpgradeLevel] + (0.15 * h.buildCost[h.currentUpgradeLevel])) > 0) {
+                   p.setCredits(p.getCredits() - (int)(h.buildCost[h.currentUpgradeLevel] + (0.15 * h.buildCost[h.currentUpgradeLevel])));
                    buildrequest.setText("Over priced build");
                    colorHotel(p, h);
                }
@@ -898,8 +905,8 @@ public class InterfaceController implements Initializable {
                 availablehotels.setText("Available Hotels: " + availableHotels);
             }
             h.currentUpgradeLevel++;
-            h.plot.isConstructed = true;
-            h.hotelOwner = p.name;
+            h.plot.setIsConstructed(true);
+            h.hotelOwner = p.getName();
             p.hotels.add(h);
         }
         else {
@@ -908,11 +915,11 @@ public class InterfaceController implements Initializable {
     }
     private void checkForEntranceAndPay(Player p) {
         int i,k;
-        if (p.name.equals("Player1")) {
+        if (p.getName().equals("Player1")) {
             i = 1;
             k = 2;
         }
-        else if (p.name.equals("Player2")) {
+        else if (p.getName().equals("Player2")) {
             i = 0;
             k = 2;
         }
@@ -921,17 +928,17 @@ public class InterfaceController implements Initializable {
             k = 1;
         }
         for (int m = 0; m < players[i].entrances.size(); m++) {
-            if (p.positionX == players[i].entrances.get(m).entranceX && p.positionY == players[i].entrances.get(m).entranceY){
+            if (p.positionX == players[i].entrances.get(m).getEntranceX() && p.positionY == players[i].entrances.get(m).getEntranceY()){
                 for (int l = 0; l < hotels.length; l++) {
                     if (hotels[l].name.equals(players[i].entrances.get(m).hName)){
                         Random r = new Random();
                         int x = r.nextInt(6) + 1;
-                        p.credits -= hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x;
-                        players[i].credits += hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x;
-                        String s = p.name + " stayed at " + hotels[l].name + " hotel owned by " + players[i].name + " for " + x + " night(s) \n with rent " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] + " per night and payed " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits. "
-                                + players[i].name + " got " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits ";
-                        if (players[i].credits > players[i].maxProfit) {
-                            players[i].maxProfit = players[i].credits;
+                        p.setCredits(p.getCredits() - hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x);
+                        players[i].setCredits(players[i].getCredits() + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x);
+                        String s = p.getName() + " stayed at " + hotels[l].name + " hotel owned by " + players[i].getName() + " for " + x + " night(s) \n with rent " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] + " per night and payed " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits. "
+                                + players[i].getName() + " got " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits ";
+                        if (players[i].getCredits() > players[i].getMaxProfit()) {
+                            players[i].setMaxProfit(players[i].getCredits());
                         }
                         creditspayedforstayinginahotel.setText(s);
                         updateCreditLabels();
@@ -940,17 +947,17 @@ public class InterfaceController implements Initializable {
             }
         }
         for (int m = 0; m < players[k].entrances.size(); m++) {
-            if (p.positionX == players[k].entrances.get(m).entranceX && p.positionY == players[k].entrances.get(m).entranceY){
+            if (p.positionX == players[k].entrances.get(m).getEntranceX() && p.positionY == players[k].entrances.get(m).getEntranceY()){
                 for (int l = 0; l < hotels.length; l++) {
                     if (hotels[l].name.equals(players[k].entrances.get(m).hName)){
                         Random r = new Random();
                         int x = r.nextInt(6) + 1;
-                        p.credits -= hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x;
-                        players[k].credits += hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x;
-                        String s = p.name + " stayed at " + hotels[l].name + " hotel owned by " + players[k].name + " for " + x + " day(s) \n with rent " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] + " per night and payed " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits. "
-                                + players[k].name + " got " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits ";
-                        if (players[k].credits > players[k].maxProfit) {
-                            players[k].maxProfit = players[k].credits;
+                        p.setCredits(p.getCredits() - hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x);
+                        players[k].setCredits(players[k].getCredits() - hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x);
+                        String s = p.getName() + " stayed at " + hotels[l].name + " hotel owned by " + players[k].getName() + " for " + x + " day(s) \n with rent " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] + " per night and payed " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits. "
+                                + players[k].getName() + " got " + hotels[l].rentCost[hotels[l].currentUpgradeLevel - 1] * x + " credits ";
+                        if (players[k].getCredits() > players[k].getMaxProfit()) {
+                            players[k].setMaxProfit(players[k].getCredits());
                         }
                         creditspayedforstayinginahotel.setText(s);
                         updateCreditLabels();
@@ -960,15 +967,15 @@ public class InterfaceController implements Initializable {
         }
     }
     private void updateCreditLabels() {
-        player1.setText("Player1: " + players[0].credits);
-        player2.setText("Player2: " + players[1].credits);
-        player3.setText("Player3: " + players[2].credits);
+        player1.setText("Player1: " + players[0].getCredits());
+        player2.setText("Player2: " + players[1].getCredits());
+        player3.setText("Player3: " + players[2].getCredits());
     }
     private void checkForEliminatedPlayers() {
         for (int i = 0; i < players.length; i++) {
-            if (players[i].credits <= 0) {
-                players[i].hasLost = true;
-                players[i].credits = 0;
+            if (players[i].getCredits() <= 0) {
+                players[i].setHasLost(true);
+                players[i].setCredits(0);
                 updateCreditLabels();
                 removeHotelsAndEntrances(players[i]);
                 gameBoard.boardgrid[players[i].positionX][players[i].positionY].stack.getChildren().remove(players[i].pawn);
@@ -983,7 +990,7 @@ public class InterfaceController implements Initializable {
             for (int j = 0; j < 12; j++) {
                 for (int k = 0; k < 15; k++) {
                     if (gameBoard.board[j][k].equals(Integer.toString(p.hotels.get(i).number))) {
-                        gameBoard.boardgrid[j][k].rec.setFill(Color.rgb(204, 255, 204));
+                        gameBoard.boardgrid[j][k].rec.setFill(Color.rgb(255, 255, 255));
                         gameBoard.boardgrid[j][k].rec.setStrokeWidth(0);
                     }
                 }
@@ -992,9 +999,9 @@ public class InterfaceController implements Initializable {
         for (int i = 0 ; i < p.entrances.size(); i++) {
             for (int j = 0; j < 12; j++) {
                 for (int k = 0; k < 15; k++) {
-                    if (j == p.entrances.get(i).entranceX && k == p.entrances.get(i).entranceY) {
-                        gameBoard.boardgrid[i][j].belongsToTheBank = true;
-                        gameBoard.boardgrid[i][j].rec.setStroke(Color.rgb(51, 26, 0));
+                    if (j == p.entrances.get(i).getEntranceX() && k == p.entrances.get(i).getEntranceY()) {
+                        gameBoard.boardgrid[i][j].setBelongsToTheBank(true);
+                        gameBoard.boardgrid[i][j].stack.getChildren().remove( gameBoard.boardgrid[i][j].image);
                     }
                 }
             }
@@ -1010,7 +1017,7 @@ public class InterfaceController implements Initializable {
         endroundbutton.setDisable(true);
         timer.cancel();
         timer.purge();
-        String s = "WINNER IS" +'\n' + '\n' + "Name : " + p.name + '\n' + "Profit : " + p.credits;   
+        String s = "WINNER IS" +'\n' + '\n' + "Name : " + p.getName() + '\n' + "Profit : " + p.getCredits();   
         TabPane tabPane = new TabPane();
         Tab t = new Tab();
         TextArea ta = new TextArea(s);
@@ -1038,7 +1045,7 @@ public class InterfaceController implements Initializable {
         btn.setOnAction(closeevent);
     }  
     private void parseHotels(String s) {
-        final File folder = new File(gameBoard.cDir + "/src/hotelboardgame/boards/" + s);
+        final File folder = new File(gameBoard.getPath() + "/src/hotelboardgame/boards/" + s);
         int numberOfHotels = folder.listFiles().length - 1;
         hotels = new Hotel[numberOfHotels];
         int k = 0;
@@ -1116,7 +1123,7 @@ public class InterfaceController implements Initializable {
     public static void howToPlay() {
         String s = "1) Roll the dice \n"
                 + "2) You can either build/upgrade a hotel, buy a plot or build an entrance\n"
-                + "3) Click on the grid to choose a hotel, a plot or a cell for entrance\n"
+                + "3) Click on the grid to choose a plot, or a hotel to build/upgrade or add an\n entrance for the selected hotel\n"
                 + "4) After you finish your moves click on the end round button\n"
                 + "5) Click on GAME or STATISTICS menus to obtain information \nabout the players and the hotels\n\n"
                 + "HAVE FUN!!!";
