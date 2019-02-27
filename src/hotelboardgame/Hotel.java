@@ -18,7 +18,7 @@ public class Hotel {
     public int currentUpgradeLevel;
     public Plot plot;
     
-    Hotel(String n, int pc, int rpc, int ec, int[] bc, int[] br, int num) {
+    public Hotel(String n, int pc, int rpc, int ec, int[] bc, int[] br, int num) {
         name = n;
         plotCost = pc;
         requiredPlotCost = rpc;

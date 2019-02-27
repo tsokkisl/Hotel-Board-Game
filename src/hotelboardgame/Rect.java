@@ -13,8 +13,32 @@ import javafx.scene.text.Text;
 public class Rect {
     public StackPane stack = new StackPane();
     public Rectangle rec = new Rectangle();
-    public Text text = new Text ("");
     public ImageView image;
-    public boolean hasEntrance = false;
-    public boolean belongsToTheBank = false;
+    private Text text;
+    private boolean hasEntrance;
+    private boolean belongsToTheBank;
+    
+    public Rect() {
+        text = new Text ("");
+        hasEntrance = false;
+        belongsToTheBank = false;
+    }
+    public void setText(String s) {
+        text.setText(s);
+    }
+    public void setHasEntrance(boolean t) {
+        hasEntrance = t;
+    }
+    public void setBelongsToTheBank(boolean t) {
+        belongsToTheBank = t;
+    }
+    public Text getText() {
+        return text;
+    }
+    public boolean getHasEntrance() {
+        return hasEntrance;
+    }
+    public boolean getBelongsToTheBank() {
+        return belongsToTheBank;
+    }
 }
