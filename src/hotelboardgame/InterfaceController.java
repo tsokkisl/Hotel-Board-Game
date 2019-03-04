@@ -113,6 +113,13 @@ public class InterfaceController implements Initializable {
             }
         }
     }
+    /**
+    * Returns an a string with hotel details. 
+    * The parameter must be a string
+    * @param       h  a Hotel object 
+    * @return      a string with hotel details
+    * @see         none
+    */
     private String hotelDetails(Hotel h) {
         String s = "";
         s = "Name: " + h.name + '\n' + "Plot Cost: " + h.plotCost + '\n' + "Required Plot Cost: " + h.requiredPlotCost + '\n'
@@ -356,9 +363,7 @@ public class InterfaceController implements Initializable {
     }
     @FXML
     private void handleBuyEntrance(ActionEvent event) {
-        findEntrances(currentPlayer);
-        buyentrancebutton.setDisable(true);
-        requestbuildbutton.setDisable(true);  
+        findEntrances(currentPlayer);  
     }
     @FXML
     private void handleRequest1000FromBank(ActionEvent event) {
@@ -783,13 +788,13 @@ public class InterfaceController implements Initializable {
     private void colorHotel(Player p, Hotel h) {
         Color c;
         if (p.getName().equals("Player1")) {
-            c = Color.rgb(0, 0, 255, (h.currentUpgradeLevel) * 0.20f);
+            c = Color.rgb(0, 0, 255);
         }
         else if (p.getName().equals("Player2")) {
-            c = Color.rgb(255, 0, 0, (h.currentUpgradeLevel) * 0.20f);
+            c = Color.rgb(255, 0, 0);
         }
         else {
-            c = Color.rgb(0, 255, 0, (h.currentUpgradeLevel) * 0.20f);
+            c = Color.rgb(0, 255, 0);
         }
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 15; j++) {
@@ -865,22 +870,25 @@ public class InterfaceController implements Initializable {
                 gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].stack.getChildren().addAll( gameBoard.boardgrid[randomEntrance.get(x).getEntranceX()][randomEntrance.get(x).getEntranceY()].image);
                 randomEntrance.clear();
                 updateCreditLabels();
+                buyentrancebutton.setDisable(true);
+                requestbuildbutton.setDisable(true);
+                buildentrancemessage.setText("");
             }
             else {
                 buildentrancemessage.setText("No available space");
             }
         }
         else {
-            buildentrancemessage.setText("No hotel owned");
+            buildentrancemessage.setText("Please select a hotel you own!");
         }
     }
-    public void buildOrUpgradeHotel(Player p, Hotel h, int n) {
+    private void buildOrUpgradeHotel(Player p, Hotel h, int n) {
         if (h.currentUpgradeLevel < h.buildCost.length) {
             if (n == 1) {
                if (p.getCredits() - h.buildCost[h.currentUpgradeLevel] > 0) {
                    p.setCredits(p.getCredits() - h.buildCost[h.currentUpgradeLevel]);
                    buildrequest.setText("Accepted build");
-                   colorHotel(p, h);
+                   if (h.currentUpgradeLevel == 0) colorHotel(p, h);
                }
                else {
                    buildrequest.setText("Not enough credits");
@@ -888,13 +896,13 @@ public class InterfaceController implements Initializable {
             }
             else if (n == 2) {
                 buildrequest.setText("Free build");
-                colorHotel(p, h);
+                if (h.currentUpgradeLevel == 0) colorHotel(p, h);
             }
             else if (n == 3) {
                 if (p.getCredits() - (h.buildCost[h.currentUpgradeLevel] + (0.15 * h.buildCost[h.currentUpgradeLevel])) > 0) {
                    p.setCredits(p.getCredits() - (int)(h.buildCost[h.currentUpgradeLevel] + (0.15 * h.buildCost[h.currentUpgradeLevel])));
                    buildrequest.setText("Over priced build");
-                   colorHotel(p, h);
+                   if (h.currentUpgradeLevel == 0) colorHotel(p, h);
                }
                else {
                    buildrequest.setText("Not enough credits");
@@ -1105,7 +1113,18 @@ public class InterfaceController implements Initializable {
             }
         }, 0, 1000);
     }
-    private boolean entranceBordersWithHotel(Player p, Hotel h) {
+    /**
+    * Returns true or false based on entrance and hotel location on the grid. 
+    * The p argument must specify a player object.
+    * The h argument must specify a hotel object.
+    * This method always returns a boolean, whether or not the 
+    * entrance borders with the hotel on the left or right or bottom or top.  
+    * @param  p a player object to get its position on grid
+    * @param  h a hotel object to get its position on grid
+    * @return      true or false
+    * @see         none
+    */
+    public boolean entranceBordersWithHotel(Player p, Hotel h) {
         if (gameBoard.board[p.positionX - 1][p.positionY].equals(Integer.toString(h.number))) {
            return true;
         }
@@ -1120,6 +1139,13 @@ public class InterfaceController implements Initializable {
         }
         return false;
     }
+    /**
+    * Creates pop up to show the game rules on the screen. 
+    * This function returns void.
+    * @param  none  an absolute URL giving the base location of the image
+    * @return      none
+    * @see         pop up window
+    */
     public static void howToPlay() {
         String s = "1) Roll the dice \n"
                 + "2) You can either build/upgrade a hotel, buy a plot or build an entrance\n"
