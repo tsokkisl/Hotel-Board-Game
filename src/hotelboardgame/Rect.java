@@ -10,7 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-public class Rect {
+public class Rect extends Board {
     public StackPane stack = new StackPane();
     public Rectangle rec = new Rectangle();
     public ImageView image;
